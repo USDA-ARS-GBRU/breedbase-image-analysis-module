@@ -1,0 +1,166 @@
+#api/app.py
+
+import os
+import subprocess
+import logging
+import sys
+import json
+import uuid
+from pathlib import Path
+
+from flask import jsonify, request, send_from_directory
+import connexion
+from werkzeug.utils import secure_filename
+from werkzeug.exceptions import BadRequest
+
+# --- Paths / Folders ---
+BASE_DIR = Path(__file__).resolve().parent
+UPLOAD_DIR = BASE_DIR / "uploads"
+RESULTS_DIR = BASE_DIR / "results"
+LOG_DIR = BASE_DIR / "logs"
+
+UPLOAD_DIR.mkdir(exist_ok=True)
+RESULTS_DIR.mkdir(exist_ok=True)
+LOG_DIR.mkdir(exist_ok=True)
+
+# --- Logging Setup ---
+LOG_FILE = LOG_DIR / "server.log"
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s] [app] %(levelname)s - %(message)s',
+    handlers=[logging.FileHandler(LOG_FILE), logging.StreamHandler()]
+)
+
+# --- App Setup ---
+ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
+MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "25"))  # template-friendly
+PROCESS_TIMEOUT_S = int(os.getenv("PROCESS_TIMEOUT_S", "180"))
+
+app = connexion.App(__name__, specification_dir=str(BASE_DIR / "config"))
+app.add_api("openapi.yml")
+flask_app = app.app
+
+# Optional hard limit for uploads (Flask enforces this)
+flask_app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_MB * 1024 * 1024
+
+
+@flask_app.route("/download/<path:filename>", methods=["GET"])
+def download_file(filename):
+    logging.info("Download requested: %s", filename)
+    return send_from_directory(RESULTS_DIR, filename, as_attachment=False)
+
+
+def _allowed_file(filename: str) -> bool:
+    if "." not in filename:
+        return False
+    ext = filename.rsplit(".", 1)[1].lower()
+    return ext in ALLOWED_EXTENSIONS
+
+
+def upload_image_and_process():
+    """
+    Connexion/OpenAPI maps an endpoint in openapi.yml to this handler.
+    Expected multipart/form-data with key: 'image'
+
+    Returns: JSON emitted by process_image.py on stdout.
+    """
+    job_id = str(uuid.uuid4())
+
+    logging.info("job_id=%s Received upload request", job_id)
+
+    if "image" not in request.files:
+        logging.warning("job_id=%s No file part in request", job_id)
+        raise BadRequest("No file part named 'image' in multipart form.")
+
+    file = request.files["image"]
+
+    if not file.filename:
+        logging.warning("job_id=%s Empty filename", job_id)
+        raise BadRequest("Missing filename.")
+
+    if not _allowed_file(file.filename):
+        logging.warning("job_id=%s Disallowed extension filename=%r", job_id, file.filename)
+        raise BadRequest(f"Invalid file type. Allowed: {sorted(ALLOWED_EXTENSIONS)}")
+
+    # Optional: basic mimetype check (not perfect, but helpful)
+    if file.mimetype and not file.mimetype.startswith("image/"):
+        logging.warning("job_id=%s Disallowed mimetype=%r", job_id, file.mimetype)
+        raise BadRequest(f"Invalid mimetype: {file.mimetype}")
+
+    safe_name = secure_filename(file.filename)
+    stem = Path(safe_name).stem
+    ext = Path(safe_name).suffix.lower()
+
+    # Make upload filename unique to avoid collisions
+    upload_name = f"{stem}_{job_id}{ext}"
+    upload_path = UPLOAD_DIR / upload_name
+    file.save(upload_path)
+    logging.info("job_id=%s Saved upload to %s", job_id, upload_path)
+
+    host_url = request.host_url.rstrip("/") + "/"
+
+    cmd = [
+        sys.executable,
+        str(BASE_DIR / "process_image.py"),
+        str(upload_path),
+        str(RESULTS_DIR),
+        "--host_url",
+        host_url,
+    ]
+
+    try:
+        result = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=str(BASE_DIR),
+            timeout=PROCESS_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired:
+        logging.exception("job_id=%s process_image.py timed out after %ss", job_id, PROCESS_TIMEOUT_S)
+        return jsonify({"error": "Processing timed out", "job_id": job_id}), 504
+    except Exception:
+        logging.exception("job_id=%s Exception running process_image.py", job_id)
+        return jsonify({"error": "Server error", "job_id": job_id}), 500
+
+    stdout = (result.stdout or "").strip()
+    stderr = (result.stderr or "").strip()
+
+    logging.info("job_id=%s returncode=%s", job_id, result.returncode)
+    if stderr:
+        logging.info("job_id=%s stderr=%r", job_id, stderr)
+
+    if result.returncode != 0:
+        # Keep response concise; stash full stderr in logs
+        return jsonify({
+            "error": "process_image failed",
+            "job_id": job_id,
+            "returncode": result.returncode,
+        }), 500
+
+    if not stdout:
+        return jsonify({
+            "error": "process_image returned no output",
+            "job_id": job_id,
+        }), 500
+
+    try:
+        payload = json.loads(stdout)
+    except json.JSONDecodeError:
+        logging.error("job_id=%s Invalid JSON from process_image stdout=%r", job_id, stdout[:1000])
+        return jsonify({
+            "error": "Invalid JSON from pipeline",
+            "job_id": job_id,
+        }), 500
+
+    # Ensure job_id is always in the response (hugely helpful for debugging)
+    if isinstance(payload, dict) and "job_id" not in payload:
+        payload["job_id"] = job_id
+
+    return jsonify(payload)
+
+
+if __name__ == "__main__":
+    logging.info("Starting app on http://0.0.0.0:8000")
+    app.run(host="0.0.0.0", port=8000)
