@@ -8,13 +8,13 @@ from datetime import datetime, timezone
 import cv2
 import math
 
-from helpers.utils import enforce_https, readimage
-from helpers.object_labeling import label_objects_rowwise
-from masking.ref_mask import create_chip_mask, create_masks
-from masking.seed_mask import create_seed_mask
-from analysis.color_correction import apply_color_correction
+from pipelines.utils import enforce_https, readimage
+from pipelines.object_labeling import label_objects_rowwise
+from pipelines.ref_mask import create_chip_mask, create_masks
+from pipelines.seed_mask import create_seed_mask
+from pipelines.color_correction import apply_color_correction
 from pipelines.size_marker_metadata import size_marker
-from analysis.shape_analysis import calculate_size_shape
+from pipelines.shape_analysis import calculate_size_shape
 
 # --------------------------------------------------------------------
 # Logging
@@ -211,7 +211,7 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
         "qc": {
             "analysis_pass": analysis_pass,
             "color_card_present": color_card_present,
-            "size_marker_present": size_marker_detected,
+            "size_marker_detected": size_marker_detected,
             "object_count": object_count
         },
         "output_mode": output_mode,

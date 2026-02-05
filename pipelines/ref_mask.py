@@ -2,8 +2,8 @@
 import cv2
 import numpy as np
 import math
-from helpers.utils import apply_mask
-from helpers.image_math import _approx_quad, _quad_rect_score, _circle_score
+from pipelines.utils import apply_mask
+from pipelines.image_math import _approx_quad, _quad_rect_score, _circle_score
 from scipy.ndimage import binary_fill_holes
 from skimage.morphology import remove_small_objects
 
