@@ -80,8 +80,8 @@ def calculate_size_shape(img, labeled_objects, sm_metadata):
         x, y, w, h = cv2.boundingRect(contour)
 
         # Convert to metric units
-        area_mm2 = (area_px2 / px2_per_mm2) if px2_per_mm2 else None
-        hull_area_mm2 = (hull_area_px2 / px2_per_mm2) if px2_per_mm2 else None
+        area_mm2 = (area_px2 / px2_per_mm2) if (px2_per_mm2 and px2_per_mm2 > 0) else None
+        hull_area_mm2 = (hull_area_px2 / px2_per_mm2) if (px2_per_mm2 and px2_per_mm2 > 0) else None
         perimeter_mm = (perimeter_px / px_per_mm) if px_per_mm else None
         major_mm = (ellipse_major_px / px_per_mm) if (ellipse_major_px is not None and px_per_mm) else None
         minor_mm = (ellipse_minor_px / px_per_mm) if (ellipse_minor_px is not None and px_per_mm) else None

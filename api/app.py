@@ -112,6 +112,12 @@ def upload_image_and_process():
     ]
 
     try:
+        output_mode = request.args.get("output_mode")
+        if output_mode in ("single", "all"):
+            cmd.extend(["--output_mode", output_mode])
+        marker_diameter = request.args.get("marker_diameter_in", type=float)
+        if marker_diameter is not None:
+            cmd.extend(["--marker_diameter_in", str(marker_diameter)])
         result = subprocess.run(
             cmd,
             stdout=subprocess.PIPE,

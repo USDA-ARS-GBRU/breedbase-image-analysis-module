@@ -6,6 +6,7 @@ import json
 import logging
 from datetime import datetime, timezone
 import cv2
+import math
 
 from helpers.utils import enforce_https, readimage
 from helpers.object_labeling import label_objects_rowwise
@@ -14,6 +15,7 @@ from masking.seed_mask import create_seed_mask
 from analysis.color_correction import apply_color_correction
 from pipelines.size_marker_metadata import size_marker
 from analysis.shape_analysis import calculate_size_shape
+
 
 os.makedirs('logs', exist_ok=True)
 LOG_FILE = os.path.join('logs', 'server.log')
@@ -29,14 +31,60 @@ logging.basicConfig(
 PIPELINE_NAME = os.getenv("PIPELINE_NAME", "seed_size_shape")
 PIPELINE_VERSION = os.getenv("PIPELINE_VERSION", "0.1.0")
 
+# Working on multi-trait schema, but adding switch for POC
+DEFAULT_OUTPUT_MODE = os.getenv("OUTPUT_MODE", "single").lower()  # "single" or "all"
 
-def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.75):
+def _to_float(x):
+    """Best-effort conversion to float; returns None if not convertible."""
+    if x is None:
+        return None
+    try:
+        # Handles numpy scalars cleanly
+        return float(x)
+    except (TypeError, ValueError):
+        return None
+
+def safe_round(x, ndigits=2):
+    """
+    Convert to float and round safely.
+    Returns None for None, non-numeric, NaN, or Inf.
+    """
+    fx = _to_float(x)
+    if fx is None or math.isnan(fx) or math.isinf(fx):
+        return None
+    return round(fx, ndigits)
+
+TRAITS_MAP = {
+        # internal_key: (public_trait_key, unit, ndigits)
+        "obj_area_mask": ("Object Area From Segmentation Mask|IMGSTAT:0000006", "mm^2", 2),
+        "obj_area_hull": ("Object Convex Hull Area|IMGSTAT:0000007", "mm^2", 2),
+        "obj_perimeter_mask": ("Object Perimeter From Segmentation Mask|IMGSTAT:0000010", "mm", 2),
+        "obj_solidity": ("Object Solidity|IMGSTAT:0000011", None, 4),
+        "obj_diam_max_ellipse": ("Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008", "mm", 2),
+        "obj_diam_min_ellipse": ("Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009", "mm", 2),
+    }
+
+def select_internal_trait_keys(output_mode: str):
+    """
+    POC mode emits a single trait but keeps the same output schema.
+    """
+    output_mode = (output_mode or "single").lower()
+    if output_mode == "all":
+        return list(TRAITS_MAP.keys())
+    # POC default: only one trait
+    return ["obj_diam_max_ellipse"]
+
+
+def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.75, output_mode=None):
     """
     Run the reference image analysis pipeline on a single image.
 
     Returns a Python dict (result envelope). Caller is responsible for printing JSON.
     Raises exceptions on failure.
     """
+    output_mode = (output_mode or DEFAULT_OUTPUT_MODE).lower()
+    selected_keys = select_internal_trait_keys(output_mode)
+    
     os.makedirs(results_dir, exist_ok=True)
     job_id = str(uuid.uuid4())
 
@@ -57,7 +105,14 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
 
     # Size marker metadata
     sm_metadata = size_marker(sm_mask, marker_diameter_in)
-    # sm_detected = next((item["value"] for item in sm_metadata if item["trait"] == "size_marker_detected"), False)
+    size_marker_present = bool(next(
+        (item["value"] for item in sm_metadata if item["trait"] == "size_marker_detected"),
+        False
+    ))
+
+    if not size_marker_present:
+        analysis_pass = False
+        objects = []
 
     # Label objects
     labeled_mask, labeled_img = label_objects_rowwise(
@@ -84,10 +139,10 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
     # NOTE: if masks are not uint8/binary, convert to boolean safely
     color_card_present = bool(cc_mask is not None and int(cc_mask.max()) > 0)
     # size_marker_present = bool(sm_mask is not None and int(sm_mask.max()) > 0)
-    size_marker_present = next(
+    size_marker_present = bool(next(
         (item["value"] for item in sm_metadata if item["trait"] == "size_marker_detected"),
         False
-    )
+    ))
     object_count = len(size_data)
 
     analysis_pass = True
@@ -96,39 +151,53 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
         analysis_pass = False
 
     # Build objects list with trait dicts
-    TRAIT_KEY = "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008"
+    # Working on multi-trait schema, but adding switch for POC
+    
+    # TRAIT_KEY = "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008"
     objects = []
     for idx, (label_id, obj_data) in enumerate(size_data.items(), start=1):
         obj_id = f"obj_{idx:03d}"
         
-        traits = obj_data.get("traits", {})
-        trait_value = traits.get("obj_diam_max_ellipse", None)
-        trait_value = round(float(trait_value), 2) if trait_value is not None else None
+        # traits = obj_data.get("traits", {})
+        # trait_value = traits.get("obj_diam_max_ellipse", None)
+        # trait_value = safe_round(traits.get("obj_diam_max_ellipse"), ndigits=2)
+        traits_in = (obj_data or {}).get("traits", {})
+        traits_out = {}
 
+
+        for internal_key in selected_keys:
+            public_key, unit, ndigits = TRAITS_MAP[internal_key]
+            raw = traits_in.get(internal_key, None)
+    
+            # Unitless traits (e.g. solidity) still get safe float conversion
+            if ndigits is None:
+                val = _to_float(raw)
+            else:
+                val = safe_round(raw, ndigits=ndigits)
+    
+            traits_out[public_key] = {"value": val, "unit": unit}
+        
         objects.append({
             "object_id": obj_id,
             "source_label": str(label_id),
-            "bbox": obj_data.get("bbox"),
-            "qc": obj_data.get("qc")
-            "traits": {
-                TRAIT_KEY: {"value": trait_value, "unit": "mm"}
-            }
+            "bbox": (obj_data or {}).get("bbox"),
+            "qc": (obj_data or {}).get("qc"),
+            "traits": traits_out,
         })
 
     envelope = {
         "job_id": job_id,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "pipeline": {"name": PIPELINE_NAME, "version": PIPELINE_VERSION},
-        "input": {
-            # "image_path": image_path,
-            "image_filename": filename
-        },
+        "input": {"image_filename": filename},
         "qc": {
             "analysis_pass": analysis_pass,
             "color_card_present": color_card_present,
             "size_marker_present": size_marker_present,
             "object_count": object_count
         },
+        "output_mode": output_mode,
+        "traits_emitted": traits_emitted,
         "derived_images": [
             {"role": "overlay", "filename": composite_image_name, "url": composite_url}
         ],
@@ -151,6 +220,8 @@ def main():
     parser.add_argument("--host_url", help="Base URL for download links")
     parser.add_argument("--marker_diameter_in", type=float, default=0.75,
                     help="Physical diameter of the size marker in inches (default: 0.75)")
+    parser.add_argument("--output_mode", choices=["single", "all"], default=DEFAULT_OUTPUT_MODE,
+                    help="Emit a single trait (POC) or all traits (default from OUTPUT_MODE env).")
     args = parser.parse_args()
 
     try:
@@ -158,7 +229,8 @@ def main():
             args.image_path,
             args.results_dir,
             host_url=args.host_url,
-            marker_diameter_in=args.marker_diameter_in
+            marker_diameter_in=args.marker_diameter_in,
+            output_mode=args.output_mode
         )
         print(json.dumps(payload))
         sys.exit(0)
