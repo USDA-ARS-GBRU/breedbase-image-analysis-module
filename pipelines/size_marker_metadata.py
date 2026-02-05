@@ -57,7 +57,13 @@ def size_marker(sm_mask, marker_diameter_in):
         metadata.append(row("marker_area_px2", marker_area_px2))
         return metadata
 
-    (cx, cy), axes, angle = cv2.fitEllipse(cnt)
+    try:
+        (cx, cy), axes, angle = cv2.fitEllipse(cnt)
+    except cv2.error:
+        metadata.append(row("size_marker_detected", False))
+        metadata.append(row("marker_area_px2", marker_area_px2))
+        return metadata
+    
     major_axis_px = float(max(axes))
     minor_axis_px = float(min(axes))
 
@@ -66,8 +72,10 @@ def size_marker(sm_mask, marker_diameter_in):
     marker_area_mm2 = math.pi * (r_mm ** 2)
 
     # Calibration: pixels per mm (and pixels^2 per mm^2)
-    px_per_mm = major_axis_px / marker_diameter_mm
-    px2_per_mm2 = marker_area_px2 / marker_area_mm2
+    px_per_mm = major_axis_px / marker_diameter_mm if marker_diameter_mm else None
+    px2_per_mm2 = marker_area_px2 / marker_area_mm2 if marker_area_mm2 else None
+
+    calibration_valid = bool(px_per_mm and px_per_mm > 0 and px2_per_mm2 and px2_per_mm2 > 0)
 
     # Inverses (often handy)
     mm_per_px = (1.0 / px_per_mm) if px_per_mm else None
@@ -90,6 +98,7 @@ def size_marker(sm_mask, marker_diameter_in):
         row("px2_per_mm2", float(px2_per_mm2)),
         row("mm_per_px", float(mm_per_px) if mm_per_px is not None else None),
         row("mm2_per_px2", float(mm2_per_px2) if mm2_per_px2 is not None else None),
+        row("calibration_valid", calibration_valid),
     ])
 
     return metadata

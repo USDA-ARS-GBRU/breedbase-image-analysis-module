@@ -33,8 +33,8 @@ def calculate_size_shape(img, labeled_objects, sm_metadata):
     """
 
     # Pull calibration factors (raise clearly if missing)
-    px_per_mm = next(item["value"] for item in sm_metadata if item["trait"] == "px_per_mm")
-    px2_per_mm2 = next(item["value"] for item in sm_metadata if item["trait"] == "px2_per_mm2")
+    px_per_mm = _get_meta(sm_metadata, "px_per_mm")
+    px2_per_mm2 = _get_meta(sm_metadata, "px2_per_mm2")
 
     overlay_img = img.copy()
     metrics_by_label = {}
@@ -67,11 +67,14 @@ def calculate_size_shape(img, labeled_objects, sm_metadata):
         ellipse_minor_px = None
         ellipse_fit_ok = False
         if len(contour) >= 5:
-            (_, _), axes, _ = cv2.fitEllipse(contour)
-            # axes are full lengths (major/minor diameters) in pixels
-            ellipse_major_px = float(max(axes))
-            ellipse_minor_px = float(min(axes))
-            ellipse_fit_ok = True
+            try:
+                (_, _), axes, _ = cv2.fitEllipse(contour)
+                # axes are full lengths (major/minor diameters) in pixels
+                ellipse_major_px = float(max(axes))
+                ellipse_minor_px = float(min(axes))
+                ellipse_fit_ok = True
+            except cv2.error:
+                ellipse_fit_ok = False
 
         # Bounding box (useful for debug / downstream cropping)
         x, y, w, h = cv2.boundingRect(contour)
@@ -100,3 +103,6 @@ def calculate_size_shape(img, labeled_objects, sm_metadata):
         }
 
     return metrics_by_label, overlay_img
+
+def _get_meta(sm_metadata, key):
+    return next((item["value"] for item in sm_metadata if item["trait"] == key), None)

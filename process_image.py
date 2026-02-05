@@ -83,7 +83,11 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
     # QC flags (minimal but useful)
     # NOTE: if masks are not uint8/binary, convert to boolean safely
     color_card_present = bool(cc_mask is not None and int(cc_mask.max()) > 0)
-    size_marker_present = bool(sm_mask is not None and int(sm_mask.max()) > 0)
+    # size_marker_present = bool(sm_mask is not None and int(sm_mask.max()) > 0)
+    size_marker_present = next(
+        (item["value"] for item in sm_metadata if item["trait"] == "size_marker_detected"),
+        False
+    )
     object_count = len(size_data)
 
     analysis_pass = True
@@ -94,14 +98,18 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
     # Build objects list with trait dicts
     TRAIT_KEY = "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008"
     objects = []
-    for idx, (seed_key, seed_data) in enumerate(size_data.items(), start=1):
+    for idx, (label_id, obj_data) in enumerate(size_data.items(), start=1):
         obj_id = f"obj_{idx:03d}"
-        trait_value = seed_data.get("obj_diam_max_ellipse", None)
+        
+        traits = obj_data.get("traits", {})
+        trait_value = traits.get("obj_diam_max_ellipse", None)
         trait_value = round(float(trait_value), 2) if trait_value is not None else None
 
         objects.append({
             "object_id": obj_id,
-            "source_label": str(seed_key),
+            "source_label": str(label_id),
+            "bbox": obj_data.get("bbox"),
+            "qc": obj_data.get("qc")
             "traits": {
                 TRAIT_KEY: {"value": trait_value, "unit": "mm"}
             }
@@ -112,7 +120,7 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "pipeline": {"name": PIPELINE_NAME, "version": PIPELINE_VERSION},
         "input": {
-            "image_path": image_path,
+            # "image_path": image_path,
             "image_filename": filename
         },
         "qc": {
@@ -150,7 +158,7 @@ def main():
             args.image_path,
             args.results_dir,
             host_url=args.host_url,
-            marker_diameter_=args.marker_diameter_in
+            marker_diameter_in=args.marker_diameter_in
         )
         print(json.dumps(payload))
         sys.exit(0)

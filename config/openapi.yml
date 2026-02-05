@@ -1,0 +1,44 @@
+
+
+openapi: 3.0.0
+info:
+  title: Image Upload API
+  version: "1.0"
+
+paths:
+    # Upload image to upload_image_and_process.py through POST
+  /upload:
+    post:
+      summary: Upload an image and do analysis.
+      # operationID references the python script 
+      # embedded in main app script to use for processing. 
+      operationId: api.app.upload_image_and_process
+      # Request Body object that defines the properties of the post upload
+      requestBody:        
+        content:
+            # multipart/form-data allows for multiple objects to be sent as part of post
+            # ours only has one for now (image) but leaves space for others (i.e. size of size marker)
+          multipart/form-data:
+            schema:
+                # type refers to what the expected input is (object, string, array, integer)
+              type: object
+              required: 
+                - image
+              properties:
+                  # this object type is called image (defined by developer, not a spec)
+                image:
+                    # images sent through http(s) are binary string types, image format defined in encoding section
+                  type: string
+                  format: binary
+              # this image object is required for post
+          # Encoding section allows for more defininhg more specific types for binary data
+            encoding:
+                image:
+                    # image/* allows for any image type (although processing code limits this to png, jpg/jpeg
+                    contentType: image/*
+      # messages sent when operation done (for success, errors, etc...)
+      responses:
+          '200':
+              description: File processed successfully.
+          '400':
+              description: Missing image or wrong type.

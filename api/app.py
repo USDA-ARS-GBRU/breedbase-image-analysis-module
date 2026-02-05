@@ -15,9 +15,11 @@ from werkzeug.exceptions import BadRequest
 
 # --- Paths / Folders ---
 BASE_DIR = Path(__file__).resolve().parent
-UPLOAD_DIR = BASE_DIR / "uploads"
-RESULTS_DIR = BASE_DIR / "results"
-LOG_DIR = BASE_DIR / "logs"
+REPO_ROOT = BASE_DIR.parent
+
+UPLOAD_DIR = REPO_ROOT / "uploads"
+RESULTS_DIR = REPO_ROOT / "results"
+LOG_DIR = REPO_ROOT / "logs"
 
 UPLOAD_DIR.mkdir(exist_ok=True)
 RESULTS_DIR.mkdir(exist_ok=True)
@@ -36,11 +38,11 @@ ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
 MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "25"))  # template-friendly
 PROCESS_TIMEOUT_S = int(os.getenv("PROCESS_TIMEOUT_S", "180"))
 
-app = connexion.App(__name__, specification_dir=str(BASE_DIR / "config"))
+app = connexion.App(__name__, specification_dir=str(REPO_ROOT / "config"))
 app.add_api("openapi.yml")
 flask_app = app.app
 
-# Optional hard limit for uploads (Flask enforces this)
+# Hard limit for uploads (Flask enforces this)
 flask_app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_MB * 1024 * 1024
 
 
@@ -64,6 +66,7 @@ def upload_image_and_process():
 
     Returns: JSON emitted by process_image.py on stdout.
     """
+    # Use job id's to prevent filename collisions
     job_id = str(uuid.uuid4())
 
     logging.info("job_id=%s Received upload request", job_id)
@@ -82,7 +85,7 @@ def upload_image_and_process():
         logging.warning("job_id=%s Disallowed extension filename=%r", job_id, file.filename)
         raise BadRequest(f"Invalid file type. Allowed: {sorted(ALLOWED_EXTENSIONS)}")
 
-    # Optional: basic mimetype check (not perfect, but helpful)
+    # Basic mimetype check
     if file.mimetype and not file.mimetype.startswith("image/"):
         logging.warning("job_id=%s Disallowed mimetype=%r", job_id, file.mimetype)
         raise BadRequest(f"Invalid mimetype: {file.mimetype}")
@@ -101,7 +104,7 @@ def upload_image_and_process():
 
     cmd = [
         sys.executable,
-        str(BASE_DIR / "process_image.py"),
+        str(REPO_ROOT / "process_image.py"),
         str(upload_path),
         str(RESULTS_DIR),
         "--host_url",
@@ -114,7 +117,7 @@ def upload_image_and_process():
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            cwd=str(BASE_DIR),
+            cwd=str(REPO_ROOT),
             timeout=PROCESS_TIMEOUT_S,
         )
     except subprocess.TimeoutExpired:
