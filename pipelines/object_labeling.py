@@ -1,29 +1,50 @@
 # helpers/object_labeling.py
+from __future__ import annotations
+
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+from typing import Tuple, Optional
 
 
-def label_objects_rowwise(binary, orig_img, output_mask_path=None, display_result=False):
+def label_objects_rowwise(
+    binary_mask: np.ndarray, 
+    orig_img: np.ndarray, 
+    output_mask_path: Optional[str] = None, 
+    display_result: bool = False,
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     Detect connected objects in a binary mask, group into rows (by y proximity),
     order left-to-right within rows, assign sequential labels (1..N), and return:
+    
         - labeled_mask (uint16): label IDs match downstream shape analysis
         - overlay_img (BGR): original image with label indices drawn outside bbox
 
     Label placement: just outside each object's bounding box so it does not
     occlude the seed outline drawn later by shape_analysis.
+
+    Args:
+        binary_mask: 2D array where non-zero = foreground object.
+        orig_img: Original (or color corrected) BGR image for overlay visualization.
+        output_mask_path: Optional path to save labeled mask.
+        display_result: If True, display overlay using matplotlib.
+
+    Returns:
+        labeled_mask = uint16 label image (0 background, 1..N objects)
+        overlay_img: image with object indices drawn
     """
 
+    if binary_mask.ndim != 2:
+        raise ValueError(f"binary mask must be 2D. Got shape={binary_mask.shape}")
+
+    if orig_img.ndim != 3:
+        raise ValueError(f"orig_img must be 3-channel BGR. Got shape={orig_img.shape}")
+
+    
     overlay = orig_img.copy()
 
     # Ensure binary is uint8 0/255
-    bin_u8 = binary.astype(np.uint8)
-    if bin_u8.max() <= 1:
-        bin_u8 = (bin_u8 > 0).astype(np.uint8) * 255
-    else:
-        bin_u8 = (bin_u8 > 0).astype(np.uint8) * 255
-
+    bin_u8 = (binary_mask > 0).astype(np.uint8) * 255
+    
     contours, _ = cv2.findContours(
         bin_u8,
         cv2.RETR_EXTERNAL,
@@ -31,7 +52,9 @@ def label_objects_rowwise(binary, orig_img, output_mask_path=None, display_resul
     )
 
     if not contours:
-        raise ValueError("No objects found in the binary image.")
+        labeled_mask = np.zeros(bin_u8.shape, dtype=np.uint16)
+        return labeled_mask, overlay
+    
 
     objects = []
     heights = []
@@ -60,16 +83,17 @@ def label_objects_rowwise(binary, orig_img, output_mask_path=None, display_resul
         })
 
     if not objects:
-        raise ValueError("No valid objects after filtering.")
+        labeled_mask = np.zeros(bin_u8.shape, dtype=np.uint16)
+        return labeled_mask, overlay
 
     # Row grouping threshold
     med_h = float(np.median(heights))
     row_thresh = max(5, int(med_h * 0.75))
 
     # Sort objects by y-coordinate
-    y_coords = np.array([obj["centroid"][1] for obj in objects])
-    sorted_indices = np.argsort(y_coords)
-    sorted_objects = [objects[i] for i in sorted_indices]
+    # y_coords = np.array([obj["centroid"][1] for obj in objects])
+    # sorted_indices = np.argsort(y_coords)
+    sorted_objects = sorted(objects, key=lambda o: o["centroid"][1])
 
     rows = []
     current_row = [sorted_objects[0]]
@@ -97,7 +121,7 @@ def label_objects_rowwise(binary, orig_img, output_mask_path=None, display_resul
     labeled_mask = np.zeros(bin_u8.shape, dtype=np.uint16)
 
     # Image-based font scaling (robust across resolutions)
-    img_h, img_w = overlay.shape[:2]
+    img_h = overlay.shape[0]
     font_scale = float(np.clip(img_h / 1400.0, 0.45, 1.6))
     thickness = int(np.clip(img_h / 900.0, 1, 3))
 
@@ -133,6 +157,7 @@ def label_objects_rowwise(binary, orig_img, output_mask_path=None, display_resul
             thickness=-1
         )
 
+        # Draw index text
         text = str(idx)
         org = label_origin_outside_bbox(obj["bbox"], overlay.shape)
 
@@ -161,6 +186,7 @@ def label_objects_rowwise(binary, orig_img, output_mask_path=None, display_resul
         )
 
     if display_result:
+        import matplotlib.pyplot as plt
         plt.imshow(cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB))
         plt.title("Labeled Overlay (labels outside bbox)")
         plt.axis("off")
