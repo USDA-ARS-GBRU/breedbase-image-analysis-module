@@ -41,7 +41,7 @@ def create_seed_mask(
     h_thresh: int = 60,
     v_thresh: int = 140,
     min_object_size: int = 100,
-    fill_holes = bool = True,
+    fill_holes: bool = True,
     return_qc: bool = False,
 ) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, Any]]]:
     """

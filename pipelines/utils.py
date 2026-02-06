@@ -62,7 +62,7 @@ def readimage(filename: PathLike, *, auto_rotate: bool = True) -> Tuple[np.ndarr
         FileNotFoundError: if the path does not exist.
         ValueError: if OpenCV cannot decode/read the image.
     """
-    path - Path(filename)
+    path = Path(filename)
     if not path.exists():
         raise FileNotFoundError(f"Image path does not exist: {path}")
     
@@ -75,7 +75,7 @@ def readimage(filename: PathLike, *, auto_rotate: bool = True) -> Tuple[np.ndarr
         if w < h:
             img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
 
-    return img, img_filename
+    return img, path
 
 
 # --------------------------------------------------------------------
