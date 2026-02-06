@@ -58,6 +58,56 @@ def _allowed_file(filename: str) -> bool:
     ext = filename.rsplit(".", 1)[1].lower()
     return ext in ALLOWED_EXTENSIONS
 
+def _to_breedbase_legacy(envelope: dict) -> dict:
+    """
+    Convert canonical envelope -> legacy BreedBase-compatible response.
+
+    Output keys:
+    - image_link (overlay image)
+    - results (subanalyses)
+    - info (optional qc metadata
+
+    NOTE:
+    - per-object image_link is null
+    """
+
+    # Overlay image URL (main analyzed image)
+    image_link = None
+    for di in envelope.get("derived_images", []) or []:
+        if di.get("role") == "overlay" and di.get("url"):
+            image_link = di["url"]
+            break
+    if not image_link and envelope.get("derived_images"):
+        image_link = envelope["derived_images"][0].get("url")
+
+    # Select emitted trait (POC = first trait)
+    traits_emitted = envelope.get("traits_emitted") or []
+    trait_key = traits_emitted[0] if traits_emitted else None
+
+    results = {}
+
+    objects = envelope.get("objects") or []
+    for i, obj in enumerate(objects, start=1):
+        sample_key = f"sample_{i:03d}"
+
+        value = None
+        if trait_key and isinstance(obj.get("traits"), dict):
+            trait_block = obj["traits"].get(trait_key)
+            if isinstance(trait_block, dict):
+                value = trait_block.get("value")
+
+        results[sample_key] = {
+            "trait_value": value,
+            "image_link": None
+        }
+
+    return {
+        "image_link": image_link,
+        "results": results,
+        "info": envelope.get("qc", {})
+    }
+    
+
 
 def upload_image_and_process():
     """
@@ -157,15 +207,25 @@ def upload_image_and_process():
     try:
         payload = json.loads(stdout)
     except json.JSONDecodeError:
-        logging.error("job_id=%s Invalid JSON from process_image stdout=%r", job_id, stdout[:1000])
+        logging.error(
+            "job_id=%s Invalid JSON from process_image stdout=%r", 
+            job_id,
+            stdout[:1000]
+        )
         return jsonify({
             "error": "Invalid JSON from pipeline",
             "job_id": job_id,
         }), 500
 
-    # Ensure job_id is always in the response (hugely helpful for debugging)
+    # Ensure job_id is always in the response
     if isinstance(payload, dict) and "job_id" not in payload:
         payload["job_id"] = job_id
+        
+    # Optional compatibility mode for single trait BreedBase output
+    resp_format = (request.args.get("format") or "canonical").lower()
+    
+    if resp_format in ("breedbase", "bb", "legacy"):
+        return jsonify(_to_breedbase_legacy(payload))
 
     return jsonify(payload)
 
