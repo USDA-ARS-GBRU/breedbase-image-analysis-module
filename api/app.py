@@ -103,6 +103,7 @@ def _to_breedbase_legacy(envelope: dict) -> dict:
 
     return {
         "image_link": image_link,
+        "trait_name": trait_key,
         "results": results,
         "info": envelope.get("qc", {})
     }
