@@ -1,20 +1,36 @@
 # analysis/color_correction.py
+from __future__ import annotations
+
+from typing import Any, Dict, Tuple
+
 import cv2
 import numpy as np
-import logging
+
+logger = logging.getLogger(__name__)
 
 
+def format_ref_matrix_cal(chip_mask: np.ndarray) -> np.ndarray:
+    """
+    Build reference color matrix based on detected number of color chips.
 
-# --------------------------------------------------------------------
-# Builds a normalized reference color matrix (chip number + RGB) matched 
-# to the detected number of chips in chip_mask, selecting between two 
-# reference card definitions and ordering chips to match the card layout.
-# --------------------------------------------------------------------
+    Args:
+        chip_mask: labeled mask where unique non-zero values respresent chips
 
-def format_ref_matrix_cal(chip_mask):
+    Returns:
+        color_matrix: (N x 4) matrix:
+            column 0 = chip number
+            columns 1-3 = normalized reference RGB values (0-1)
+    """
+
+    if chip_mask.ndim != 2:
+        raise ValueError("chip_mask must be 2D")
+        
     # Count the number of chips identified in chip_mask (gives an idea of which color card was used)
     N_chips = len(np.unique(chip_mask))-1
-    # Dependency based on color card used
+    if N_chips <= 0:
+        raise ValueError("No color chips detected in chip_mask")
+
+    # --- Extended card (e.g. citrus card) ---
     if N_chips > 26:
         ref = np.array([[ 92,  95, 152],
                         [171, 120,  99],
@@ -48,13 +64,20 @@ def format_ref_matrix_cal(chip_mask):
                         [188, 181, 160],
                         [163, 161, 143],
                         [140, 138, 124]], dtype=np.float64)
-        # Source for bins https://citrusvariety.ucr.edu/citrus-varieties/fruit-quality-evaluation-data
+            # Source for bins https://citrusvariety.ucr.edu/citrus-varieties/fruit-quality-evaluation-data
+        if N_chips > ref.shape[0]:
+            raise ValueError(
+                f"Detected {N_chips} chips but reference supports {ref.shape[0]}"
+            )
         
-        
-        chip_nb = np.arange(1, N_chips+1)
-        color_matrix_wo_chip_nb = ref/255.
-        color_matrix = np.concatenate((chip_nb.reshape(N_chips, 1), color_matrix_wo_chip_nb), axis=1)
-    
+        chip_nb = np.arange(1, N_chips + 1)
+        color_matrix_wo_chip_nb = ref[:N_chips] / 255.0
+        color_matrix = np.concatenate(
+            (chip_nb.reshape(N_chips, 1), color_matrix_wo_chip_nb), 
+            axis=1,
+        )
+
+    # --- Standard 24-chip color card ---
     else:
         ref = np.array([[115, 82, 68],  # dark skin
                         [194, 150, 130],  # light skin
@@ -80,138 +103,208 @@ def format_ref_matrix_cal(chip_mask):
                         [122, 122, 121],  # neutral 5 (.7*)
                         [85, 85, 85],  # neutral 3.5 (1.05*)
                         [52, 52, 52]], dtype=np.float64)  # black (1.50*)
+        
+        if N_chips != 24:
+            raise ValueError(
+                f"Expected 24-chip card, but detected {N_chips} chips"
+            )
+
         # array of indices from 1 to N chips in order to match the chip numbering
-        # in the color card specs. Later when used for indexing, we subtract the 1.
-        idx = np.arange(N_chips)+1
-        chip_nb = np.arange(10, 10*N_chips+1, 10)
+        idx = np.arange(N_chips) + 1
+        chip_nb = np.arange(10, 10 * N_chips + 1, 10)
+        
         # indices in the shape of the color card
         cc_indices = idx.reshape((4, 6), order='C')
+        
         # rotate the indices depending on the specified orientation
         cc_indices_rot = np.rot90(cc_indices, k=3, axes=(0, 1))
         # arange color values based on the indices
-        color_matrix_wo_chip_nb = ref[(cc_indices_rot-1).reshape(-1), :]/255.
-        # add chip number compatible with other PlantCV functions
-        # chip_nb = np.arange(10, 10*N_chips+1, 10)
-        color_matrix = np.concatenate((chip_nb.reshape(N_chips, 1), color_matrix_wo_chip_nb), axis=1)
+        
+        color_matrix_wo_chip_nb = (
+            ref[(cc_indices_rot - 1).reshape(-1), :] / 255.0
+        )
+        
+    return np.concatenate((chip_nb.reshape(N_chips, 1), color_matrix_wo_chip_nb), axis=1)
 
-    return color_matrix
 
-
-# --------------------------------------------------------------------
-# Computes per-chip mean RGB values from an image using a labeled chip 
-# mask and returns a matrix of chip IDs with their average channel intensities.
-# --------------------------------------------------------------------
-
-def extract_chip_colors(rgb_img, mask):
-    """Calculate the average value of pixels in each color chip for each color channel.
-
-    Inputs:
-    rgb_img         = RGB image with color chips visualized
-    mask        = a gray-scale img with unique values for each segmented space, representing unique, discrete
-                    color chips.
-
-    Outputs:
-    color_matrix        = a 22x4 matrix containing the average red value, average green value, and average blue value
-                            for each color chip.
-    headers             = a list of 4 headers corresponding to the 4 columns of color_matrix respectively
-
-    :param rgb_img: numpy.ndarray
-    :param mask: numpy.ndarray
-    :return headers: string array
-    :return color_matrix: numpy.ndarray
+def extract_chip_colors(bgr_img: np.ndarray, chip_mask: np.ndarray) -> np.ndarray:
     """
+    Compute per-chip mean RGB values from labeled chip mask.
+
+    Args:
+        bgr_img: BGR image (H x W x 3)
+        chip_mask: labeled mask (H x W), unique non-zero = chips ID
+
+    Returns:
+        color_matrix: (N x 4)
+            column 0 = chip number
+            columns 1-3 = normalized mean RGB values (0-1)
+    """
+    
     # Check for RGB input
-    if len(np.shape(rgb_img)) != 3:
-        #fatal_error("Input rgb_img is not an RGB image.")
-        raise ValueError("Input rgb_img is not an RGB image.")
+    if bgr_img.ndim != 3 or bgr_img.shape[2] != 3:
+        raise ValueError("bgr_img must be HxWx3")
     # Check mask for gray-scale
-    if len(np.shape(mask)) != 2:
-        # fatal_error("Input mask is not an gray-scale image.")
-        raise ValueError("Input mask is not an gray-scale image.")
-
-    img_dtype = rgb_img.dtype
-    # normalization value as max number if the type is unsigned int
-    max_val = 1.0
-    if img_dtype.kind == 'u':
-        max_val = np.iinfo(img_dtype).max
-
+    if chip_mask.ndim != 2:
+        raise ValueError("chip_mask must be 2D")
+    
     # convert to float and normalize to work with values between 0-1
-    rgb_img = rgb_img.astype(np.float64)/max_val
+    img_norm = bgr_img.astype(np.float64) / 255.0
 
+    chip_ids = [i for i in np.unique(chip_mask) if i != 0]
+    if not chip_ids:
+        raise ValueError("No labeled chips found in mask.")
+    
     # create empty color_matrix
-    color_matrix = np.zeros((len(np.unique(mask))-1, 4))
+    color_matrix = np.zeros((length(chip_ids), 4), dtype=np.float64)
 
-    # create headers
-    headers = ["chip_number", "r_avg", "g_avg", "b_avg"]
 
-    # declare row_counter variable and initialize to 0
-    row_counter = 0
+    for row_idx, chip_id in enumerate(chip_ids):
+        chip_pixels = img_norm[chip_mask == chip_id]
 
-    # for each unique color chip calculate each average RGB value
-    for i in np.unique(mask):
-        if i != 0:
-            chip = rgb_img[np.where(mask == i)]
-            color_matrix[row_counter][0] = i
-            color_matrix[row_counter][1] = np.mean(chip[:, 2])
-            color_matrix[row_counter][2] = np.mean(chip[:, 1])
-            color_matrix[row_counter][3] = np.mean(chip[:, 0])
-            row_counter += 1
+        if chip_pixels.size == 0:
+            continue
+
+        # OpenCV BGR -> convert to RGB order
+        color_matrix[row_idx, 0] = chip_id
+        color_matrix[row_idx, 1] = np.mean(chip_pixels[:, 2]) # R
+        color_matrix[row_idx, 2] = np.mean(chip_pixels[:, 1]) # G
+        color_matrix[row_idx, 3] = np.mean(chip_pixels[:, 0]) # B
 
     return color_matrix
-
-
-# --------------------------------------------------------------------
-# Fits an affine color transform from measured chip colors to reference 
-# chip colors (optionally subsetting chips for custom cards) and applies 
-# that transform to every pixel to produce a color-corrected image.
-# --------------------------------------------------------------------
-
-def apply_color_correction(rgb_img, chip_mask):
-    h, w, c = rgb_img.shape
-    source_matrix = extract_chip_colors(rgb_img ,chip_mask)
-    target_matrix = format_ref_matrix_cal(chip_mask)
-
-    # number of references
-    n = source_matrix.shape[0]
-
-    # For custom color card, we do not use all of the chips for color correction (1-8,13-21,25,27-32)
-    # We need to subset both source and target to account for this. 
-
-    if n > 25:
-        indices = np.hstack([np.arange(start, end) for start, end in [(0, 8), (12, 21), (24, 25), (26, 32)]])
-        source_matrix = source_matrix[indices]
-        target_matrix = target_matrix[indices]
     
-    n = source_matrix.shape[0]
-    # the column zero (index) of the matrices is not used in this model
-    # augment matrix of source values with a column of 1s for the constant part of
-    # the affine transformation
-    S = np.concatenate((source_matrix[:, 1:].copy(), np.ones((n, 1))), axis=1)
 
-    # make vectors of target values for each color
-    T = target_matrix[:, 1:].copy()
-    tr = T[:, 0]
-    tg = T[:, 1]
-    tb = T[:, 2]
+def apply_color_correction(
+    bgr_img: np.ndarray, 
+    chip_mask: np.ndarray,
+    *,
+    fail_behavior: str = "passthrough",
+    min_chips: int = 12,
+    max_condition_number: float = 1e8,
+) -> Tuple[np.ndarray, Dict[str, Any]]:
+    """
+    Fit affine color transform using reference color chips and apply to image.
 
-    # calculate regression vector for each color as the pseudoinverse of the source
-    # values matrix multiplied by each color target vector
-    ar = np.matmul(np.linalg.pinv(S), tr)
-    ag = np.matmul(np.linalg.pinv(S), tg)
-    ab = np.matmul(np.linalg.pinv(S), tb)
+    - If correction fails for any reason, returns original image unchaged (default).
+    - Returns a qc dict describing what happened. 
+    
+    Args:
+        bgr_img: Input BGR image.
+        chip_mask: Labeled chip mask.
+        fail_behavior:
+            - "passthrough" (default): return original image on failure
+            - "raise": raise exception on failure
+        min_chips: minimum number of detected chips required to attempt correction.
+        max_condition_number: if regression matrix is ill-conditioned above this, 
+                              treat as failure.
 
-    img_rgb = cv2.cvtColor(rgb_img, cv2.COLOR_BGR2RGB)
-    # reshape image as a 2D array where the rows are pixels and the columns are color channels
-    # and augment the channels with a column of 1s for the affine transformation
-    img_pix = np.concatenate((img_rgb.reshape(h*w, c).astype(np.float64)/255, np.ones((h*w, 1))), axis=1)
+    Returns:
+        corrected_bgr: corrected image (or original if skipped or failed)
+        qc: dict with fields:
+            - color_correction_applied (bool)
+            - color_card_present (bool)
+            - chips_detected (int)
+            - reason (str or None)
+    """
 
-    # calculate the corrected colors, eliminate values outside the range [0-1] and
-    # convert to [0-255] uint8
-    img_r_cc = (255*np.clip(np.matmul(img_pix, ar), 0, 1)).astype(np.uint8)
-    img_g_cc = (255*np.clip(np.matmul(img_pix, ag), 0, 1)).astype(np.uint8)
-    img_b_cc = (255*np.clip(np.matmul(img_pix, ab), 0, 1)).astype(np.uint8)
+    qc: Dict[str, Any] = {
+        "color_correction_applied": False,
+        "color_card_present": False,
+        "chips_detected": 0,
+        "reason": None,
+    }
 
-    # reconstruct the RGB (actually BGR for openCV) image
-    corrected_img = np.stack((img_b_cc, img_g_cc, img_r_cc), axis=1).reshape(h, w, c)
+    # Basic validation
+    if bgr_img is None or not isinstance(bgr_img, np.ndarray):
+        msg = "Input image is None or invalid"
+        qc["reason"] = msg
+        if fail_behavior == "raise":
+            raise ValueError(msg)
+        return bgr_img, qc
 
-    return corrected_img
+    if bgr_img.ndim != 3 or bgr_img.shape[2] != 3:
+        msg = f"Expected HxWx3 BGR image, got shape={getattr(bgr_img, 'shape', None)}"
+        qc["reason"] = msg
+        if fail_behavior == "raise":
+            raise ValueError(msg)
+        return bgr_img, qc
+
+    if chip_mask is None or not isinstance(chip_mask, np.ndarray) or chip_mask.ndim != 2:
+        # No chip_mask -> skip correction
+        qc["reason"] = "chip_mask is missing or invalid; skipping color correction"
+        return bgr_img, qc
+
+    # Count chips (uniwue non-zero ids)
+    chip_ids = [int(i) for i in np.unique(chip_mask) if i != 0]
+    qc["chips_detected"] = len(chip_ids)
+    qc["color_card_present"] = qc["chips_detected"] > 0
+
+    if qc["chips_detected"] < min_chips:
+        qc["reason"] = f"insufficient chips for correction (detected={qc['chips_detected']}, min={min_chips})"
+        return bgr_img, qc
+
+    try:
+    
+        source_matrix = extract_chip_colors(bgr_img, chip_mask)
+        target_matrix = format_ref_matrix_cal(chip_mask)
+    
+        if source_matrix.shape != target_matrix.shape:
+            raise ValueError(
+                f"source/target matrix shape mismatch: {source_matrix.shape} vs {target_matrix.shape}"
+            )
+            
+        # number of references
+        n = source_matrix.shape[0]
+    
+        # Subset for extended reference card
+        if n > 25:
+            indices = np.hstack(
+                [np.arange(start, end) for start, end in [(0, 8), (12, 21), (24, 25), (26, 32)]]
+            )
+            source_matrix = source_matrix[indices]
+            target_matrix = target_matrix[indices]
+            n = source_matrix.shape[0]
+        
+        # --- Build regression system: S * coeffs ~= T ---
+        S = np.concatenate(
+            (source_matrix[:, 1:].copy(), np.ones((n, 1))), 
+            axis=1,
+        ) # (n x 4)
+    
+        # make vectors of target values for each color
+        T = target_matrix[:, 1:] # (n x 3)
+
+        # Ill-conditioning check
+        cond = np.linalg.cond(S)
+        if not np.isfinite(cond) or cond > max_condition_number:
+            raise RuntimeError(f"regression matrix ill-conditioned (cond={cond:.3g})")
+        
+        coeffs = np.linalg.pinv(S) @ T # (4 x 3)
+    
+        # --- Apply transform ---
+        h, w, _ = bgr_img.shape
+        img_rgb = cv2.cvtColor(bgr_img, cv2.COLOR_BGR2RGB)
+        
+        pix = img_rgb.reshape(h * w, c).astype(np.float64) / 255.0
+        pix_aug = np.concatenate((pix, np.ones((h * w, 1))), axis=1) # (hw x 4)
+    
+        corrected = np.clip(pix_aug @ coeffs, 0, 1)
+    
+        corrected_rgb = (corrected.reshape(h, w, 3) * 255).astype(np.uint8)
+    
+        # reconstruct the RGB (actually BGR for openCV) image
+        corrected_bgr = cv2.cvtColor(corrected_rgb, cv2.COLOR_RGB2BGR)
+
+        qc["color_correction_applied"] = True
+        qc["reason"] = None
+        return corrected_bgr, qc
+    
+    except Exception as e:
+        qc["reason"] = f"color correction failed: {type(e).__name__}: {e}"
+        logger.exception(qc["reason"])
+
+        if fail_behavior == "raise":
+            raise
+        return bgr_img, qc
+
+

@@ -116,7 +116,7 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
     chip_mask = create_chip_mask(img, cc_mask)
 
     # Color correction
-    corrected_img = apply_color_correction(img, chip_mask)
+    corrected_img, _ = apply_color_correction(img, chip_mask)
 
     # --------------------------------------------------------------------
     # Seed/object masks
