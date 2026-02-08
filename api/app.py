@@ -38,7 +38,7 @@ ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
 MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "25"))  # template-friendly
 PROCESS_TIMEOUT_S = int(os.getenv("PROCESS_TIMEOUT_S", "180"))
 
-app = connexion.App(__name__, specification_dir=str(REPO_ROOT / "config"))
+app = connexion.App(__name__, specification_dir=str(BASE_DIR / "config"))
 app.add_api("openapi.yml")
 flask_app = app.app
 
@@ -230,7 +230,10 @@ def upload_image_and_process():
 
     return jsonify(payload)
 
-
-if __name__ == "__main__":
+def main():
     logging.info("Starting app on http://0.0.0.0:8000")
     app.run(host="0.0.0.0", port=8000)
+
+
+if __name__ == "__main__":
+    main()
