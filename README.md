@@ -157,5 +157,13 @@ This ensures compatibility with:
 ## 12. Citation
 If you use this module, please cite:
 
-
+## Docker Image
+Official image:
+```
+docker pull: hkmanchi/sorghum-breedbase-image-pipeline:latest
+```
+Architecture:
+```
+linux/amd64
+```
 
