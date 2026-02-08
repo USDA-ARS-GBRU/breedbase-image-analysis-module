@@ -1,0 +1,16 @@
+services:
+  image-pipeline:
+    build: .
+    container_name: breedbase-image-pipeline
+    ports:
+      - "8000:8000"
+    environment:
+      MAX_UPLOAD_MB: "25"
+      PROCESS_TIMEOUT_S: "180"
+      PIPELINE_NAME: "seed_size_shape"
+      PIPELINE_VERSION: "0.1.0"
+      HOSTURL: "http://breedbase-image-pipeline:8000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./results:/app/results
+      - ./logs:/app/logs

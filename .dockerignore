@@ -1,0 +1,17 @@
+
+# .dockerignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.ipynb_checkpoints/
+*.ipynb
+
+.git/
+.DS_Store
+
+# runtime artifacts (mount or create at runtime)
+logs/
+uploads/
+results/
