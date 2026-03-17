@@ -1,5 +1,6 @@
 # Core web framework
 connexion[flask]>=3.0.0
+connexion[uvicorn]
 flask>=2.3
 werkzeug>=2.3
 

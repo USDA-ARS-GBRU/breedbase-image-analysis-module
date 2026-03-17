@@ -157,7 +157,7 @@ def extract_chip_colors(bgr_img: np.ndarray, chip_mask: np.ndarray) -> np.ndarra
         raise ValueError("No labeled chips found in mask.")
     
     # create empty color_matrix
-    color_matrix = np.zeros((length(chip_ids), 4), dtype=np.float64)
+    color_matrix = np.zeros((len(chip_ids), 4), dtype=np.float64)
 
 
     for row_idx, chip_id in enumerate(chip_ids):
@@ -286,7 +286,7 @@ def apply_color_correction(
         h, w, _ = bgr_img.shape
         img_rgb = cv2.cvtColor(bgr_img, cv2.COLOR_BGR2RGB)
         
-        pix = img_rgb.reshape(h * w, c).astype(np.float64) / 255.0
+        pix = img_rgb.reshape(h * w, 3).astype(np.float64) / 255.0
         pix_aug = np.concatenate((pix, np.ones((h * w, 1))), axis=1) # (hw x 4)
     
         corrected = np.clip(pix_aug @ coeffs, 0, 1)
