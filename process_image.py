@@ -16,19 +16,7 @@ from pipelines.color_correction import apply_color_correction
 from pipelines.size_marker_metadata import size_marker
 from pipelines.shape_analysis import calculate_size_shape
 
-# --------------------------------------------------------------------
-# Logging
-# --------------------------------------------------------------------
-os.makedirs('logs', exist_ok=True)
-LOG_FILE = os.path.join('logs', 'server.log')
-logging.basicConfig(
-    level=logging.INFO,
-    format='[%(asctime)s] [process_image] %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(LOG_FILE),
-        logging.StreamHandler(sys.stderr)
-    ]
-)
+logger = logging.getLogger(__name__)
 
 PIPELINE_NAME = os.getenv("PIPELINE_NAME", "seed_size_shape")
 PIPELINE_VERSION = os.getenv("PIPELINE_VERSION", "0.1.0")
@@ -158,7 +146,7 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
     # Host URL handling
     host_url = os.environ.get('HOSTURL') if not host_url else host_url
     host_url = enforce_https(host_url) if host_url else host_url
-    composite_url = f"{host_url}/download/{composite_image_name}" if host_url else composite_image_path
+    composite_url = f"{host_url}download/{composite_image_name}" if host_url else composite_image_path
 
     # --------------------------------------------------------------------
     # QC flags (image-level)
@@ -232,6 +220,17 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
 
 
 def main():
+    os.makedirs('logs', exist_ok=True)
+    log_file = os.path.join('logs', 'server.log')
+    logging.basicConfig(
+        level=logging.INFO,
+        format='[%(asctime)s] [process_image] %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(log_file),
+            logging.StreamHandler(sys.stderr)
+        ]
+    )
+
     parser = argparse.ArgumentParser(description="Run the reference image analysis pipeline.")
     parser.add_argument("image_path", help="Path to the input image")
     parser.add_argument("results_dir", help="Directory to save outputs")
@@ -254,7 +253,7 @@ def main():
         sys.exit(0)
 
     except Exception as e:
-        logging.exception("Pipeline failed")
+        logger.exception("Pipeline failed")
         error_payload = {
             "error": str(e),
             "error_type": type(e).__name__

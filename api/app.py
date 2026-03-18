@@ -1,11 +1,10 @@
 #api/app.py
 
 import os
-import subprocess
-import logging
 import sys
-import json
+import logging
 import uuid
+import concurrent.futures
 from pathlib import Path
 
 from flask import jsonify, request, send_from_directory
@@ -16,6 +15,12 @@ from werkzeug.exceptions import BadRequest
 # --- Paths / Folders ---
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
+
+# Ensure repo root is on the path so process_image and pipelines are importable
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from process_image import process_image as run_pipeline  # noqa: E402
 
 UPLOAD_DIR = REPO_ROOT / "uploads"
 RESULTS_DIR = REPO_ROOT / "results"
@@ -114,8 +119,6 @@ def upload_image_and_process():
     """
     Connexion/OpenAPI maps an endpoint in openapi.yml to this handler.
     Expected multipart/form-data with key: 'image'
-
-    Returns: JSON emitted by process_image.py on stdout.
     """
     # Use job id's to prevent filename collisions
     job_id = str(uuid.uuid4())
@@ -152,79 +155,30 @@ def upload_image_and_process():
     logging.info("job_id=%s Saved upload to %s", job_id, upload_path)
 
     host_url = request.host_url.rstrip("/") + "/"
-
-    cmd = [
-        sys.executable,
-        str(REPO_ROOT / "process_image.py"),
-        str(upload_path),
-        str(RESULTS_DIR),
-        "--host_url",
-        host_url,
-    ]
+    output_mode = request.args.get("output_mode")
+    marker_diameter = request.args.get("marker_diameter_in", type=float)
 
     try:
-        output_mode = request.args.get("output_mode")
-        if output_mode in ("single", "all"):
-            cmd.extend(["--output_mode", output_mode])
-        marker_diameter = request.args.get("marker_diameter_in", type=float)
-        if marker_diameter is not None:
-            cmd.extend(["--marker_diameter_in", str(marker_diameter)])
-        result = subprocess.run(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            cwd=str(REPO_ROOT),
-            timeout=PROCESS_TIMEOUT_S,
-        )
-    except subprocess.TimeoutExpired:
-        logging.exception("job_id=%s process_image.py timed out after %ss", job_id, PROCESS_TIMEOUT_S)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(
+                run_pipeline,
+                str(upload_path),
+                str(RESULTS_DIR),
+                host_url=host_url,
+                marker_diameter_in=marker_diameter if marker_diameter is not None else 0.75,
+                output_mode=output_mode,
+            )
+            payload = future.result(timeout=PROCESS_TIMEOUT_S)
+    except concurrent.futures.TimeoutError:
+        logging.error("job_id=%s Pipeline timed out after %ss", job_id, PROCESS_TIMEOUT_S)
         return jsonify({"error": "Processing timed out", "job_id": job_id}), 504
     except Exception:
-        logging.exception("job_id=%s Exception running process_image.py", job_id)
-        return jsonify({"error": "Server error", "job_id": job_id}), 500
+        logging.exception("job_id=%s Pipeline raised an exception", job_id)
+        return jsonify({"error": "Pipeline failed", "job_id": job_id}), 500
 
-    stdout = (result.stdout or "").strip()
-    stderr = (result.stderr or "").strip()
-
-    logging.info("job_id=%s returncode=%s", job_id, result.returncode)
-    if stderr:
-        logging.info("job_id=%s stderr=%r", job_id, stderr)
-
-    if result.returncode != 0:
-        # Keep response concise; stash full stderr in logs
-        return jsonify({
-            "error": "process_image failed",
-            "job_id": job_id,
-            "returncode": result.returncode,
-        }), 500
-
-    if not stdout:
-        return jsonify({
-            "error": "process_image returned no output",
-            "job_id": job_id,
-        }), 500
-
-    try:
-        payload = json.loads(stdout)
-    except json.JSONDecodeError:
-        logging.error(
-            "job_id=%s Invalid JSON from process_image stdout=%r", 
-            job_id,
-            stdout[:1000]
-        )
-        return jsonify({
-            "error": "Invalid JSON from pipeline",
-            "job_id": job_id,
-        }), 500
-
-    # Ensure job_id is always in the response
-    if isinstance(payload, dict) and "job_id" not in payload:
-        payload["job_id"] = job_id
-        
     # Optional compatibility mode for single trait BreedBase output
     resp_format = (request.args.get("format") or "canonical").lower()
-    
+
     if resp_format in ("breedbase", "bb", "legacy"):
         return jsonify(_to_breedbase_legacy(payload))
 
