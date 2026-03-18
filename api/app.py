@@ -16,12 +16,6 @@ from werkzeug.exceptions import BadRequest
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 
-# Ensure repo root is on the path so process_image and pipelines are importable
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
-
-from process_image import process_image as run_pipeline  # noqa: E402
-
 UPLOAD_DIR = REPO_ROOT / "uploads"
 RESULTS_DIR = REPO_ROOT / "results"
 LOG_DIR = REPO_ROOT / "logs"
@@ -157,6 +151,10 @@ def upload_image_and_process():
     host_url = request.host_url.rstrip("/") + "/"
     output_mode = request.args.get("output_mode")
     marker_diameter = request.args.get("marker_diameter_in", type=float)
+
+    if str(REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(REPO_ROOT))
+    from process_image import process_image as run_pipeline
 
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
