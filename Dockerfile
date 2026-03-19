@@ -33,5 +33,5 @@ ENV MAX_UPLOAD_MB=25 \
 
 EXPOSE 8000
 
-# Connexion app exposes underlying Flask app as `flask_app` in api/app.py
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "--workers", "2", "--threads", "4", "--timeout", "180", "api.app:flask_app"]
+# Serve the Connexion app directly so its middleware handles /upload routing
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "--workers", "2", "--threads", "4", "--timeout", "180", "api.app:app"]
