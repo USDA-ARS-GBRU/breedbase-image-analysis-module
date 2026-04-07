@@ -2,11 +2,14 @@
 
 import os
 import sys
+import json
 import logging
 import uuid
 import concurrent.futures
+from datetime import datetime, timezone
 from pathlib import Path
 
+import cv2
 from flask import jsonify, request, send_from_directory
 import connexion
 from werkzeug.utils import secure_filename
@@ -148,31 +151,53 @@ def upload_image_and_process():
     file.save(upload_path)
     logging.info("job_id=%s Saved upload to %s", job_id, upload_path)
 
-    host_url = request.host_url.rstrip("/") + "/"
     output_mode = request.args.get("output_mode")
     marker_diameter = request.args.get("marker_diameter_in", type=float)
 
     if str(REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(REPO_ROOT))
-    from process_image import process_image as run_pipeline
+    from process_image import analyze_image, PIPELINE_NAME, PIPELINE_VERSION
 
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
             future = executor.submit(
-                run_pipeline,
+                analyze_image,
                 str(upload_path),
-                str(RESULTS_DIR),
-                host_url=host_url,
                 marker_diameter_in=marker_diameter if marker_diameter is not None else 0.75,
                 output_mode=output_mode,
             )
-            payload = future.result(timeout=PROCESS_TIMEOUT_S)
+            result = future.result(timeout=PROCESS_TIMEOUT_S)
     except concurrent.futures.TimeoutError:
         logging.error("job_id=%s Pipeline timed out after %ss", job_id, PROCESS_TIMEOUT_S)
         return jsonify({"error": "Processing timed out", "job_id": job_id}), 504
     except Exception:
         logging.exception("job_id=%s Pipeline raised an exception", job_id)
         return jsonify({"error": "Pipeline failed", "job_id": job_id}), 500
+
+    # Write overlay image to results dir
+    composite_image_name = f"{stem}_ResultImage_{job_id}.png"
+    composite_image_path = RESULTS_DIR / composite_image_name
+    cv2.imwrite(str(composite_image_path), result["overlay_img"])
+
+    host_url_base = request.host_url.rstrip("/") + "/"
+    composite_url = f"{host_url_base}download/{composite_image_name}"
+
+    # Build canonical envelope
+    payload = {
+        "job_id": job_id,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "pipeline": {"name": PIPELINE_NAME, "version": PIPELINE_VERSION},
+        "input": {"image_filename": safe_name},
+        "qc": result["qc"],
+        "output_mode": result["output_mode"],
+        "traits_emitted": result["traits_emitted"],
+        "derived_images": [
+            {"role": "overlay", "filename": composite_image_name, "url": composite_url}
+        ],
+        "objects": result["objects"],
+    }
+
+    logging.info("job_id=%s Analysis complete: %d objects", job_id, result["qc"]["object_count"])
 
     # Optional compatibility mode for single trait BreedBase output
     resp_format = (request.args.get("format") or "canonical").lower()
