@@ -27,12 +27,11 @@ dev = [
     "pytest>=7",
 ]
 
-# entry point added in next step:
-# [project.scripts]
-# bb-analyze = "cli:main"
+[project.scripts]
+bb-analyze = "cli:main"
 
 [tool.setuptools]
-py-modules = ["process_image"]
+py-modules = ["process_image", "cli"]
 
 [tool.setuptools.packages.find]
 where = ["."]
