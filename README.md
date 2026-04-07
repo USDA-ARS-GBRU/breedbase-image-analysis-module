@@ -614,7 +614,7 @@ Every result from any compliant pipeline includes the following provenance field
 This ensures compatibility with:
 
 - IMGSTAT-style image-derived trait ontologies
-- BIAO-style QC and provenance tracking
+- QC and provenance tracking
 - FAIR data principles (Findable, Accessible, Interoperable, Reusable)
 
 ---
