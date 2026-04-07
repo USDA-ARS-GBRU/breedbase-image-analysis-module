@@ -113,25 +113,94 @@ For BreedBase-specific integration instructions, see:
 ## 9. Installation
 
 ### Requirements
-- Python 3.10+
-- pip or conda
-- OpenCV (if using reference pipeline)
+- Python 3.9+
+- pip
 
-### Setup
+### As a Python package (recommended)
+
+Install core image analysis dependencies only:
+```
+pip install .
+```
+
+Install with API server dependencies (Connexion, Flask, Gunicorn):
+```
+pip install ".[api]"
+```
+
+Install in editable mode for development:
+```
+pip install -e ".[api]"
+```
+
+### Legacy (requirements.txt)
 ```
 git clone https://github.com/...
 cd breedbase-image-analysis-module
 pip install -r requirements.txt
 ```
 
-### Run
+### Run the API server
 ```
-python app.py
+python api/app.py
 ```
 Server runs at:
 ```
 http://localhost:8000
 ```
+
+## 9a. Command-Line Interface
+
+After installing the package, the `bb-analyze` command is available:
+
+```
+# Print JSON results to stdout (no files written)
+bb-analyze path/to/image.jpg
+
+# Save overlay image and JSON sidecar to a directory
+bb-analyze path/to/image.jpg --output-dir ./results
+
+# Emit all traits instead of the default single trait
+bb-analyze path/to/image.jpg --output-mode all
+
+# Specify size marker diameter (default: 0.75 inches)
+bb-analyze path/to/image.jpg --marker-diameter 1.0
+
+# Combine options
+bb-analyze path/to/image.jpg --output-dir ./results --output-mode all --marker-diameter 0.75
+```
+
+Output is a JSON envelope printed to stdout. Exit code is 0 on success, 1 on failure.
+
+## 9b. Python API
+
+The pipeline can be called directly from Python without the HTTP layer:
+
+```python
+from process_image import analyze_image
+
+result = analyze_image("path/to/image.jpg", output_mode="all")
+
+print(result["qc"])
+# {'analysis_pass': True, 'color_card_present': True,
+#  'size_marker_detected': True, 'object_count': 65}
+
+for obj in result["objects"]:
+    traits = obj["traits"]
+    print(obj["object_id"], traits["Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008"])
+```
+
+`analyze_image()` returns a dict with the following keys:
+
+| Key | Description |
+|-----|-------------|
+| `qc` | Image-level QC flags (`analysis_pass`, `color_card_present`, `size_marker_detected`, `object_count`) |
+| `objects` | List of per-object dicts, each containing `object_id`, `bbox`, `qc`, and `traits` |
+| `output_mode` | `"single"` or `"all"` |
+| `traits_emitted` | List of public trait keys included in this run |
+| `overlay_img` | NumPy array of the annotated result image |
+
+This function performs no file I/O and has no side effects — it is safe to call in notebooks, scripts, or other pipelines.
 
 ## 10. Development Guidelines
 - Pipelines must be deterministic
