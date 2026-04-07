@@ -7,17 +7,17 @@ A standardized, API-driven backend framework for integrating automated image ana
 The BreedBase Image Analysis Module provides a structured, API-driven framework for integrating automated image analysis pipelines into BreedBase. It enables reproducible extraction of image-derived phenotypes, quality control metrics, and provenance metadata suitable for use in real-world breeding programs.
 
 #### What this repository provides:
-A reference Flask/Connexion backend implementation
-A standardized API contract (OpenAPI-based)
-A structured pipeline interface
-Example pipeline implementation
-Integration requirements for third-party pipelines
-Documentation for reproducible deployment
+- A reference Flask/Connexion backend implementation
+- A standardized API contract (OpenAPI-based)
+- A structured pipeline interface
+- Example pipeline implementation
+- Integration requirements for third-party pipelines
+- Documentation for reproducible deployment
 
 #### What this repository does NOT include:
-BreedBase UI code (hosted in the BreedBase repository)
-Species-specific trait ontologies
-Production infrastructure (e.g., queue systems, cloud storage)
+- BreedBase UI code (hosted in the BreedBase repository)
+- Species-specific trait ontologies
+- Production infrastructure (e.g., queue systems, cloud storage)
 
 ## 2. Architecture
 High-level data flow:
