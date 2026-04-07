@@ -74,20 +74,21 @@ def safe_round(x, ndigits=2):
 def _meta_value(sm_metadata, trait, default=None):
     return next((item["value"] for item in sm_metadata if item.get("trait") == trait), default)
 
-def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.75, output_mode=None):
+def analyze_image(image_path, marker_diameter_in=0.75, output_mode=None):
     """
-    Run the reference image analysis pipeline on a single image.
+    Run the image analysis pipeline on a single image.
 
-    Returns a Python dict (result envelope). Caller is responsible for printing JSON.
+    Pure analysis function — no file I/O, no job IDs, no URLs.
+    Returns a dict with keys:
+      - qc:            image-level QC flags
+      - objects:       list of per-object trait dicts
+      - output_mode:   str
+      - traits_emitted: list of public trait keys
+      - overlay_img:   numpy array of the result overlay image
     Raises exceptions on failure.
     """
-    
-    os.makedirs(results_dir, exist_ok=True)
-    job_id = str(uuid.uuid4())
-    
     output_mode = (output_mode or DEFAULT_OUTPUT_MODE).lower()
     selected_keys = select_internal_trait_keys(output_mode)
-    
     traits_emitted = [TRAITS_MAP[k][0] for k in selected_keys]
 
     # --------------------------------------------------------------------
@@ -134,26 +135,11 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
         size_data, overlay_img = calculate_size_shape(labeled_img, labeled_mask, sm_metadata)
 
     # --------------------------------------------------------------------
-    # Output filenames
-    # --------------------------------------------------------------------
-    filename = os.path.basename(image_path)
-    name_no_ext = os.path.splitext(filename)[0]
-
-    composite_image_name = f"{name_no_ext}_ResultImage_{job_id}.png"
-    composite_image_path = os.path.join(results_dir, composite_image_name)
-    cv2.imwrite(composite_image_path, overlay_img)
-
-    # Host URL handling
-    host_url = os.environ.get('HOSTURL') if not host_url else host_url
-    host_url = enforce_https(host_url) if host_url else host_url
-    composite_url = f"{host_url}download/{composite_image_name}" if host_url else composite_image_path
-
-    # --------------------------------------------------------------------
     # QC flags (image-level)
     # --------------------------------------------------------------------
     color_card_present = bool(cc_mask is not None and int(cc_mask.max()) > 0)
     object_count = len(size_data)
-    
+
     analysis_pass = True
     if not size_marker_detected:
         analysis_pass = False
@@ -161,24 +147,21 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
         analysis_pass = False
 
     # --------------------------------------------------------------------
-    # Build objects list with trait dicts (one or many traits with switch)
+    # Build objects list with trait dicts
     # --------------------------------------------------------------------
-    
     objects = []
     if analysis_pass:
         for idx, (label_id, obj_data) in enumerate(size_data.items(), start=1):
             obj_id = f"obj_{idx:03d}"
-            
             traits_in = (obj_data or {}).get("traits", {})
             traits_out = {}
-    
-    
+
             for internal_key in selected_keys:
                 public_key, unit, ndigits = TRAITS_MAP[internal_key]
                 raw = traits_in.get(internal_key, None)
                 val = safe_round(raw, ndigits=ndigits) if ndigits is not None else _to_float(raw)
                 traits_out[public_key] = {"value": val, "unit": unit}
-            
+
             objects.append({
                 "object_id": obj_id,
                 "source_label": str(label_id),
@@ -187,6 +170,49 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
                 "traits": traits_out,
             })
 
+    return {
+        "qc": {
+            "analysis_pass": analysis_pass,
+            "color_card_present": color_card_present,
+            "size_marker_detected": size_marker_detected,
+            "object_count": object_count,
+        },
+        "objects": objects,
+        "output_mode": output_mode,
+        "traits_emitted": traits_emitted,
+        "overlay_img": overlay_img,
+    }
+
+
+def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.75, output_mode=None):
+    """
+    Run the reference image analysis pipeline on a single image.
+
+    Thin wrapper around analyze_image() that handles all file I/O:
+    writes the overlay image and JSON sidecar to results_dir.
+
+    Returns a Python dict (result envelope). Caller is responsible for printing JSON.
+    Raises exceptions on failure.
+    """
+    os.makedirs(results_dir, exist_ok=True)
+    job_id = str(uuid.uuid4())
+
+    result = analyze_image(image_path, marker_diameter_in=marker_diameter_in, output_mode=output_mode)
+
+    # --------------------------------------------------------------------
+    # Output filenames
+    # --------------------------------------------------------------------
+    filename = os.path.basename(image_path)
+    name_no_ext = os.path.splitext(filename)[0]
+
+    composite_image_name = f"{name_no_ext}_ResultImage_{job_id}.png"
+    composite_image_path = os.path.join(results_dir, composite_image_name)
+    cv2.imwrite(composite_image_path, result["overlay_img"])
+
+    # Host URL handling
+    host_url = os.environ.get('HOSTURL') if not host_url else host_url
+    host_url = enforce_https(host_url) if host_url else host_url
+    composite_url = f"{host_url}download/{composite_image_name}" if host_url else composite_image_path
 
     # --------------------------------------------------------------------
     # Canonical envelope v1
@@ -196,18 +222,13 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "pipeline": {"name": PIPELINE_NAME, "version": PIPELINE_VERSION},
         "input": {"image_filename": filename},
-        "qc": {
-            "analysis_pass": analysis_pass,
-            "color_card_present": color_card_present,
-            "size_marker_detected": size_marker_detected,
-            "object_count": object_count
-        },
-        "output_mode": output_mode,
-        "traits_emitted": traits_emitted,
+        "qc": result["qc"],
+        "output_mode": result["output_mode"],
+        "traits_emitted": result["traits_emitted"],
         "derived_images": [
             {"role": "overlay", "filename": composite_image_name, "url": composite_url}
         ],
-        "objects": objects
+        "objects": result["objects"],
     }
 
     # Save JSON sidecar
