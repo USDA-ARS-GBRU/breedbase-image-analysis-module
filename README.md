@@ -393,31 +393,42 @@ If the command is not found, confirm that your Python environment's `bin` or `Sc
 
 ### 8.3 Usage: Command-Line Interface
 
-The `bb-analyze` command is the fastest way to run the pipeline on a single image outside of BreedBase.
+The `bb-analyze` command is the fastest way to run the pipeline on a single image outside of BreedBase. `--output-dir` is required — results are always written to files rather than printed to the terminal.
 
 #### Basic usage
-
-```bash
-# Print JSON results to the terminal
-bb-analyze path/to/image.jpg
-```
-
-#### Save results to a directory
 
 ```bash
 bb-analyze path/to/image.jpg --output-dir ./results
 ```
 
-Writes two files to `./results/`:
-- `image_result.json` — the full JSON output
-- `image_overlay.jpg` — the original image with object boundaries and labels drawn
+Writes two files to `./results/` and prints their paths:
+
+```
+Overlay:  ./results/image_ResultImage_<job_id>.png
+Results:  ./results/image_metadata_<job_id>.json
+```
+
+- `image_metadata_<job_id>.json` — the full JSON output envelope (see [Section 6](#6-the-standardized-output-envelope))
+- `image_ResultImage_<job_id>.png` — the original image with object boundaries and labels drawn
+
+#### Choose output format
+
+```bash
+# Default: write results as JSON
+bb-analyze path/to/image.jpg --output-dir ./results --format json
+
+# Write results as CSV (one row per detected object)
+bb-analyze path/to/image.jpg --output-dir ./results --format csv
+```
+
+The CSV format flattens the `objects` array into one row per detected object. Each row includes envelope-level metadata (job ID, timestamp, pipeline name/version, QC flags) repeated alongside the per-object fields and trait values. This is suited for direct import into spreadsheet tools; use JSON for programmatic or BreedBase use.
 
 #### Emit all traits
 
 ```bash
 # Default emits a single trait (proof-of-concept mode)
 # Use --output-mode all to extract all six morphometric traits
-bb-analyze path/to/image.jpg --output-mode all
+bb-analyze path/to/image.jpg --output-dir ./results --output-mode all
 ```
 
 #### Specify size marker diameter
@@ -425,7 +436,7 @@ bb-analyze path/to/image.jpg --output-mode all
 ```bash
 # Default assumes a 0.75-inch circular marker
 # Override if your marker has a different known physical diameter
-bb-analyze path/to/image.jpg --marker-diameter 1.0
+bb-analyze path/to/image.jpg --output-dir ./results --marker-diameter 1.0
 ```
 
 The `--marker-diameter` value must match the physical diameter of the circular reference object present in your image, in inches. This value drives the pixel-to-millimeter conversion.
@@ -435,11 +446,12 @@ The `--marker-diameter` value must match the physical diameter of the circular r
 ```bash
 bb-analyze path/to/image.jpg \
   --output-dir ./results \
+  --format csv \
   --output-mode all \
   --marker-diameter 0.75
 ```
 
-On success, exits with code `0`. On failure, exits with code `1`. Output follows the envelope described in [Section 6](#6-the-standardized-output-envelope).
+On success, exits with code `0` and prints the paths to the overlay and results files. On failure, exits with code `1` and prints a JSON error to stdout.
 
 ---
 
