@@ -10,11 +10,14 @@ import math
 
 from pipelines.utils import enforce_https, readimage
 from pipelines.object_labeling import label_objects_rowwise
-from pipelines.ref_mask import create_chip_mask, create_masks
+# from pipelines.ref_mask import create_chip_mask, create_masks
+from pipelines.ref_mask import create_masks
 from pipelines.seed_mask import create_seed_mask
-from pipelines.color_correction import apply_color_correction
+# from pipelines.color_correction import apply_color_correction
+from pipelines.color_correction_v2 import apply_color_correction
 from pipelines.size_marker_metadata import size_marker
 from pipelines.shape_analysis import calculate_size_shape
+from pipelines.create_chip_mask_v3 import create_chip_mask, REFERENCE_RGB
 
 logger = logging.getLogger(__name__)
 
@@ -102,10 +105,27 @@ def analyze_image(image_path, marker_diameter_in=0.75, output_mode=None):
     cc_mask, sm_mask = create_masks(img, raise_errors=False)
 
     # Chip mask for color correction
-    chip_mask = create_chip_mask(img, cc_mask)
+    # chip_mask = create_chip_mask(img, cc_mask)
+    chip_mask = create_chip_mask(
+        img = img,
+        cc_mask = cc_mask,
+        reference_rgb = REFERENCE_RGB,
+        n_cols = 4,
+        n_rows = 6,
+        valley_threshold = None,
+        valley_threshold_offset = 20, #only used when valley_threshold=None
+        min_valley_distance = 40,
+        edge_margin_frac = 0.08,
+        min_band_width_frac = 0.60,
+        max_band_width_frac = 1.3,
+        min_valid_chip_fraction = 0.75,
+        max_acceptable_delta_e = 60.0,
+        return_overlay = False, 
+        return_chip_data = False)
 
     # Color correction
-    corrected_img, _ = apply_color_correction(img, chip_mask)
+    corrected_img, _ = apply_color_correction(img, chip_mask, method = "affine")
+    
 
     # --------------------------------------------------------------------
     # Seed/object masks
