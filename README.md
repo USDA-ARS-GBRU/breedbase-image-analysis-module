@@ -45,7 +45,7 @@ Example output:
 | obj_001 | 4.3 mm | 3.1 mm | 14.2 mm² |
 | obj_002 | 4.1 mm | 3.0 mm | 13.6 mm² |
 
-![Example: an image of seeds on the left; the same image with each seed outlined and labeled on the right.](docs/img/example_overlay.tiff)
+<img src="https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/docs/img/example_overlay.tiff" alt="Example: an image of seeds on the left; the same image with each seed outlined and labeled on the right." width="600" height="400">
 
 To go further, see [Running the reference pipeline](#running-the-reference-pipeline).
 
@@ -304,7 +304,7 @@ The reference pipeline's accuracy depends on how the photo is taken. Every image
 - **Even, diffuse lighting** with minimal shadows and no glare on the seeds, card, or marker.
 - **Seeds/organs spread out** so they do not touch or overlap (touching objects may be merged).
 
-![Example of a correctly set up photo: seeds spread on a neutral background with a color card and circular size marker.](docs/img/capture_example.jpg)
+<img src="https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/docs/img/capture_example.jpg" alt="Example of a correctly set up photo: seeds spread on a neutral background with a color card and circular size marker." width="300" height="200">
 
 If the color card or size marker is not detected, the corresponding QC flag will be `false` — see [Troubleshooting](#troubleshooting).
 
