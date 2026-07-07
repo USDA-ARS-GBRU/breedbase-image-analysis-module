@@ -1,13 +1,28 @@
 # BreedBase Image Analysis Module
 
-A standardized, API-driven framework for integrating automated image analysis pipelines into BreedBase. The module defines the interface contract that any compliant pipeline must satisfy, handles communication between BreedBase and registered pipelines, and returns structured, ontology-keyed trait measurements with QC flags and provenance metadata suitable for storage as breeding observations.
+**A shared standard — plus one working example — for turning plant images into breeding data.**
 
-This repository also provides a fully functional **seed morphometry pipeline** as the reference implementation. It demonstrates how the framework operates end to end and is available for direct use outside of BreedBase via CLI, Python API, or Docker.
+Modern cameras and computer vision can measure dozens of plant traits from a single photo: seed size and shape, canopy cover, leaf architecture, disease lesion area, and more. Capturing those images is now fast and cheap. The bottleneck has moved: **getting that measured data into a breeding database, in a consistent form, is still done by hand-built, one-off code for every new tool and every new crop.** Pipelines rarely transfer between programs, and breeding databases have no standard way to talk to them.
 
-**Field Book → BreedBase → Image Analysis Module → BreedBase → Breeder**
+This project fixes that. It defines a **standard connector** between [BreedBase](https://breedbase.org) (a widely used breeding database) and *any* image analysis pipeline, and it ships **one fully working pipeline** — seed morphometry — as a reference example. Analysis tools plug in without custom glue code, and results come back in one predictable format that BreedBase can store directly, complete with quality-control flags and a record of exactly how each measurement was produced.
+
+**In plain terms:** if you have photos of seeds, you can measure them with the included pipeline today (via a web command, Python, or Docker). If you build image analysis tools, you can make yours plug into BreedBase by following one specification. If you run BreedBase, this is how you connect analysis tools to it.
+
+> This repository also contains the reference **seed morphometry pipeline**, usable on its own — outside BreedBase — via command line, Python, or Docker.
 
 ---
 
+## Architecture at a glance
+
+(docs/img/architecture.tiff)
+
+*The module sits between BreedBase and the analysis pipelines. BreedBase never calls a pipeline directly — it hands images to the module, and the module routes, validates, and returns standardized results.*
+
+
+*BreedBase appears twice because it both **sends** the image out for analysis and **receives** the finished measurements back.*
+
+
+---
 ## Table of Contents
 
 1. [Overview](#1-overview)
