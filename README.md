@@ -9,9 +9,7 @@ This project fixes that. It defines a **standard connector** between [BreedBase]
 **In plain terms:** if you have photos of seeds, you can measure them with the included pipeline today (via a web command, Python, or Docker). If you build image analysis tools, you can make yours plug into BreedBase by following one specification. If you run BreedBase, this is how you connect analysis tools to it.
 
 > This repository also contains the reference **seed morphometry pipeline**, usable on its own — outside BreedBase — via command line, Python, or Docker.
-
 ---
-
 ## Architecture at a glance
 
 *The module sits between BreedBase and the analysis pipelines. BreedBase never calls a pipeline directly — it hands images to the module, and the module routes, validates, and returns standardized results.*
@@ -47,83 +45,67 @@ Example output:
 | obj_001 | 4.3 mm | 3.1 mm | 14.2 mm² |
 | obj_002 | 4.1 mm | 3.0 mm | 13.6 mm² |
 
-
-
-![Example: an image of seeds on the left; the same image with each seed outlined and labeled on the right.](docs/img/example_overlay.png)
-
-> **Note on the name:** the Docker image is named for sorghum, the crop this pipeline was first validated on, but the seed morphometry pipeline is **crop-agnostic** — it works on any seeds or small organs photographed with the required reference objects (see [Image capture requirements](#image-capture-requirements)).
+![Example: an image of seeds on the left; the same image with each seed outlined and labeled on the right.](docs/img/example_overlay.tiff)
 
 To go further, see [Running the reference pipeline](#running-the-reference-pipeline).
 
 ---
 
-## Table of Contents
+## Who should read this
 
-1. [Overview](#1-overview)
-2. [Who Should Read This](#2-who-should-read-this)
-3. [Architecture and Integration Flow](#3-architecture-and-integration-flow)
-4. [The API Contract](#4-the-api-contract)
-5. [Building a Compatible Pipeline](#5-building-a-compatible-pipeline)
-6. [The Standardized Output Envelope](#6-the-standardized-output-envelope)
-7. [Design Principles](#7-design-principles)
-8. [Reference Implementation: Seed Morphometry Pipeline](#8-reference-implementation-seed-morphometry-pipeline)
-   - [8.1 How the Pipeline Works](#81-how-the-pipeline-works)
-   - [8.2 Installation](#82-installation)
-   - [8.3 Usage: Command-Line Interface](#83-usage-command-line-interface)
-   - [8.4 Usage: Python API](#84-usage-python-api)
-   - [8.5 Usage: Docker](#85-usage-docker)
-9. [Repository Structure](#9-repository-structure)
-10. [Reproducibility and Provenance](#10-reproducibility-and-provenance)
-11. [Citation](#11-citation)
+| I am… | I want to… | Start at |
+|-------|-----------|----------|
+| **Curious / evaluating** | See what this does before committing | [Quick start](#quick-start-about-2-minutes) |
+| **A researcher / breeder** | Measure my own seed images | [Image capture requirements](#image-capture-requirements), then [Running the reference pipeline](#running-the-reference-pipeline) |
+| **A pipeline developer** | Build an analysis tool that plugs into BreedBase | [The API contract](#the-api-contract), then [Building a compatible pipeline](#building-a-compatible-pipeline) |
+| **A BreedBase admin / developer** | Connect a pipeline to BreedBase | [Architecture](#architecture-at-a-glance), then [The API contract](#the-api-contract) |
+| **Evaluating the design** | Understand the architecture and rationale | [Architecture](#architecture-at-a-glance), then [Design principles](#design-principles) |
 
 ---
 
-## 1. Overview
+## Key terms
 
-### What this repository provides
+<details>
+<summary>Click to expand a short glossary</summary>
+
+- **BreedBase** — an open-source breeding database used by many public breeding programs to store trait data, pedigrees, and field trials.
+- **Field Book** — a free Android app breeders use to collect trait data in the field; feeds into BreedBase.
+- **BrAPI (Breeding API)** — a common data standard that lets breeding software exchange data in a consistent structure. This module's output is BrAPI-compatible.
+- **Ontology / IMGSTAT** — a controlled vocabulary that gives each trait a standard name and ID so "seed diameter" means the same thing everywhere. IMGSTAT is the ontology for image-derived traits used here.
+- **Trait** — a measurable characteristic (e.g., seed diameter, area).
+- **Morphometry** — measurement of size and shape.
+- **QC flag** — a quality-control marker on a result (e.g., "did the calibration succeed?") used to decide whether a measurement is trustworthy.
+- **Provenance** — the record of how a result was produced (which pipeline, which version, when).
+- **Output envelope** — the single, standard JSON structure every result comes back in.
+- **Size marker** — a circular object of known real-world diameter placed in the photo, used to convert pixels to millimeters.
+- **Color card** — a calibration card placed in the photo, used to correct for lighting and color differences between images.
+- **FAIR** — data principles: Findable, Accessible, Interoperable, Reusable.
+
+</details>
+
+---
+
+## What this repository includes
+
+**Included:**
 
 - A reference Flask/Connexion backend implementing the BreedBase image analysis integration layer
-- A standardized API contract (OpenAPI 3.0) defining how BreedBase communicates with analysis pipelines
-- A structured pipeline interface specification describing what any compliant pipeline must accept and return
-- A complete reference pipeline (seed morphometry) demonstrating the framework in practice
+- A standardized API contract (OpenAPI 3.0) defining how BreedBase communicates with pipelines
+- A pipeline interface specification describing what any compliant pipeline must accept and return
+- A complete reference pipeline (seed morphometry)
 - Documentation for reproducible deployment
 
-### What this repository does NOT include
+**Not included:** BreedBase UI code (lives in the BreedBase repository), species-specific trait ontologies, and production infrastructure such as job queues or cloud storage.
 
-- BreedBase UI code (hosted in the BreedBase repository)
-- Species-specific trait ontologies
-- Production infrastructure such as job queues or cloud storage
-
-### How future pipeline repositories relate to this one
-
-This repository defines the standard. Independent image analysis pipelines intended for BreedBase integration should implement the interface described in [Section 5](#5-building-a-compatible-pipeline) and expose a `POST /analyze` endpoint conforming to the API contract in [Section 4](#4-the-api-contract). The seed morphometry pipeline in this repository is the model for what those repositories should look like.
+**Building your own pipeline?** Implement the interface in [Building a compatible pipeline](#building-a-compatible-pipeline) and expose a `POST /analyze` endpoint conforming to [The API contract](#the-api-contract). The seed morphometry pipeline here is the model to copy.
 
 ---
 
-## 2. Who Should Read This
+## How the integration works
 
-This README serves several distinct audiences. Use the table below to find your entry point.
+BreedBase does not call pipelines directly. It submits images and metadata to this module's `POST /analyze` endpoint; the module routes the request to the right pipeline, validates the output against the contract, and returns a standardized JSON result that BreedBase stores as trait observations.
 
-| I am... | I want to... | Start at |
-|---------|-------------|----------|
-| A **BreedBase administrator or developer** | Connect an existing or new pipeline to BreedBase | [Section 3](#3-architecture-and-integration-flow), then [Section 4](#4-the-api-contract) |
-| A **pipeline developer** | Build a new image analysis pipeline that integrates with BreedBase | [Section 4](#4-the-api-contract), then [Section 5](#5-building-a-compatible-pipeline) |
-| A **researcher** who wants to run the seed morphometry pipeline directly | Use the pipeline outside of BreedBase | [Section 8](#8-reference-implementation-seed-morphometry-pipeline) |
-| A **developer evaluating the framework** | Understand the architecture and design decisions | [Section 3](#3-architecture-and-integration-flow), then [Section 7](#7-design-principles) |
-
----
-
-## 3. Architecture and Integration Flow
-
-### System overview
-
-```
-Field Book → BreedBase → Image Analysis Module → BreedBase → Breeder
-```
-
-The Image Analysis Module sits between BreedBase and any registered analysis pipeline. BreedBase does not call pipelines directly. Instead, it submits images and metadata to this module's `POST /analyze` endpoint, which routes the request to the appropriate pipeline, validates the output against the interface contract, and returns a standardized JSON envelope that BreedBase stores as trait observations.
-
-### Step-by-step integration flow
+Step-by-step:
 
 1. An image is captured in the field and stored in BreedBase (via Field Book or direct upload)
 2. A user or automated process triggers analysis from the BreedBase UI
@@ -133,44 +115,36 @@ The Image Analysis Module sits between BreedBase and any registered analysis pip
 6. The module validates the result and returns it to BreedBase
 7. BreedBase stores per-object trait observations and derived overlay images, associating them with the relevant stocks and projects
 
-### What the module handles on behalf of pipelines
-
-- HTTP request routing and validation against the OpenAPI contract
-- Input preprocessing (image decoding, metadata parsing)
-- Output schema validation before results are returned to BreedBase
-- Error handling and failure response formatting
-- Provenance field injection (timestamp, job ID)
-
-Pipeline authors implement only the analysis logic. They do not need to implement HTTP handling, schema validation, or BreedBase-specific formatting.
+**The module handles for every pipeline:** HTTP routing and validation against the OpenAPI contract, input preprocessing (image decoding, metadata parsing), output schema validation, error handling, and provenance injection (timestamp, job ID). **Pipeline authors implement only the analysis logic** — no HTTP handling, schema validation, or BreedBase-specific formatting.
 
 ---
 
-## 4. The API Contract
+## The API Contract
 
-The full contract is defined in `config/openapi.yml`. This section summarizes the key details.
+The full contract is in `config/openapi.yml`; a rendered, browsable version is published at [API docs](#) *(link once GitHub Pages / Redoc is set up)*. Summary below.
 
-### Primary endpoint
+### Endpoint
 
 ```
 POST /analyze
 ```
 
-### Request
-
-Multipart form upload:
+### Request (multipart form upload)
 
 | Field | Required | Type | Description |
 |-------|----------|------|-------------|
 | `image` | Yes | File (JPEG or PNG) | The image to analyze |
-| `output_mode` | No | string | `single` (default) or `all` — controls how many traits are emitted |
-| `format` | No | string | `canonical` (default) or `breedbase` — response format variant |
-| `marker_diameter_in` | No | float | Physical diameter of the size reference marker in inches (default: `0.75`) |
+| `output_mode` | No | string | `single` (default) or `all` — how many traits are emitted |
+| `format` | No | string | `canonical` (default) or `breedbase` — response **shape** variant |
+| `marker_diameter_in` | No | float | Physical diameter of the size marker, in inches (default: `0.75`) |
+
+> **Heads-up — two different `format` switches.** The API `format` parameter (`canonical`/`breedbase`) selects the JSON *shape*. The CLI `--format` flag (`json`/`csv`) selects the *file type* written to disk. They are unrelated.
 
 ### Response
 
-The endpoint returns the standardized JSON envelope described in [Section 6](#6-the-standardized-output-envelope).
+Returns the standard JSON envelope described in [The output envelope](#the-output-envelope).
 
-### Example request using curl
+### Example - curl
 
 ```bash
 curl -X POST http://localhost:8000/analyze \
@@ -178,7 +152,7 @@ curl -X POST http://localhost:8000/analyze \
   -F "output_mode=all"
 ```
 
-### Example request using Python
+### Example - Python
 
 ```python
 import requests
@@ -195,85 +169,52 @@ result = response.json()
 
 ### BrAPI compatibility
 
-Trait keys in the output follow the IMGSTAT ontology format (`Human-readable name|ONTOLOGY:ID`) and are structured for direct ingestion into BreedBase as BrAPI-compatible observations. Units are always explicit. See [Section 6](#6-the-standardized-output-envelope) for the full output structure.
+Trait keys follow the IMGSTAT ontology format (`Human-readable name|ONTOLOGY:ID`) and are structured for direct ingestion into BreedBase as BrAPI-compatible observations. Units are always explicit.
 
 ---
 
-## 5. Building a Compatible Pipeline
+## Building a Compatible Pipeline
 
-Any image analysis pipeline can be integrated into this framework by satisfying the interface contract described here. The seed morphometry pipeline in this repository is the reference implementation — its structure, inputs, outputs, and packaging are the model for what a compatible pipeline repository should look like.
-
-Full specification: `docs/PIPELINE_REQUIREMENTS.md`
+Any image analysis pipeline can join this framework by satisfying the interface below. The seed morphometry pipeline here is the reference — copy its structure. Full specification: `docs/PIPELINE_REQUIREMENTS.md`. To check your work, run the conformance test kit *(see [Contributing](#contributing))*.
 
 ### What a pipeline must accept
 
 | Input | Type | Description |
 |-------|------|-------------|
 | Image path | string | Path to the image file on disk |
-| Output directory | string | Directory where derived images and sidecar files should be written |
-| Metadata | dict (optional) | Session-level metadata passed through from the BreedBase request |
-| Parameters | dict (optional) | Pipeline-specific analysis parameters (e.g., marker diameter, thresholds) |
+| Output directory | string | Where derived images and sidecar files are written |
+| Metadata | dict (optional) | Session-level metadata passed through from BreedBase |
+| Parameters | dict (optional) | Pipeline-specific parameters (e.g., marker diameter, thresholds) |
 
 ### What a pipeline must return
 
-The pipeline must return a JSON payload (printed to stdout or returned to the caller) containing:
+A JSON payload (printed to stdout or returned to the caller) containing `pipeline.name`, `pipeline.version`, `qc`, `objects`, and `traits_emitted`. See [The output envelope](#the-output-envelope) for the full structure and a complete example — it is not repeated here.
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `pipeline.name` | Yes | Pipeline identifier string |
-| `pipeline.version` | Yes | Semantic version string (e.g., `"1.0.0"`) |
-| `qc` | Yes | Image-level QC flags — see below |
-| `objects` | Yes | List of per-object records — see below |
-| `traits_emitted` | Yes | List of trait keys included in this result |
-
-#### Required QC flags
+Minimum QC block:
 
 ```json
-"qc": {
-  "analysis_pass": true,
-  "object_count": 65
-}
+"qc": { "analysis_pass": true, "object_count": 65 }
 ```
 
-`analysis_pass` must be `true` only when the pipeline considers the result reliable enough to store as observations. Additional pipeline-specific QC fields (e.g., `size_marker_detected`, `color_card_present`) are encouraged and will be passed through to BreedBase.
-
-#### Per-object record structure
-
-```json
-{
-  "object_id": "obj_001",
-  "bbox": { "x": 713, "y": 552, "w": 42, "h": 40 },
-  "qc": { "contour_found": true },
-  "traits": {
-    "Trait Human-Readable Name|ONTOLOGY:ID": {
-      "value": 4.3,
-      "unit": "mm"
-    }
-  }
-}
-```
-
-Trait keys must follow the `Name|ONTOLOGY:ID` format. Values and units must always be explicit — never omit units or leave them implicit.
+`analysis_pass` must be `true` only when the result is reliable enough to store. Additional QC fields (e.g., `size_marker_detected`, `color_card_present`) are encouraged and passed through to BreedBase.
 
 ### Pipeline requirements checklist
 
 - [ ] Deterministic — the same image and parameters always produce the same output
 - [ ] All trait values include explicit units
 - [ ] `pipeline.name` and `pipeline.version` present in every result
-- [ ] `qc.analysis_pass` accurately reflects result reliability
+- [ ] `qc.analysis_pass` accurately reflects reliability
 - [ ] No hard-coded file paths
 - [ ] Output written only to the designated output directory
 - [ ] Installable as a Python package or runnable as a Docker container
 
-### Recommended repository structure for a new pipeline
-
-A new pipeline repository should follow the structure of this repository:
+### Recommended repository structure
 
 ```
 my-pipeline/
 ├── pipelines/           # Core analysis modules
 ├── api/
-│   ├── app.py           # Connexion/Flask server (can be copied from this repo)
+│   ├── app.py           # Connexion/Flask server (copy from this repo)
 │   └── config/openapi.yml
 ├── process_image.py     # analyze_image() pure function + CLI wrapper
 ├── cli.py               # CLI entry point
@@ -284,27 +225,20 @@ my-pipeline/
 └── README.md
 ```
 
-The `api/` directory and `openapi.yml` contract can be reused directly from this repository with minimal modification. Pipeline authors implement `process_image.py` and the modules under `pipelines/`.
+The `api/` directory and `openapi.yml` contract can be reused directly with minimal change. You implement `process_image.py` and the modules under `pipelines/`.
 
 ---
 
-## 6. The Standardized Output Envelope
+## The output envelope
 
-All pipelines registered with this framework return results in the same JSON envelope structure. This standardization is what allows BreedBase to store results from any compliant pipeline without format-specific handling.
-
-### Full envelope example
+Every compliant pipeline returns the same JSON structure — that uniformity is what lets BreedBase store results from any pipeline without special-casing.
 
 ```json
 {
   "job_id": "3f2a1b4c-...",
   "timestamp": "2024-06-15T14:32:00Z",
-  "pipeline": {
-    "name": "seed_size_shape",
-    "version": "0.1.0"
-  },
-  "input": {
-    "image_filename": "tray_001.jpg"
-  },
+  "pipeline": { "name": "seed_size_shape", "version": "0.1.0" },
+  "input": { "image_filename": "tray_001.jpg" },
   "qc": {
     "analysis_pass": true,
     "color_card_present": true,
@@ -317,25 +251,17 @@ All pipelines registered with this framework return results in the same JSON env
     "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009"
   ],
   "derived_images": [
-    {
-      "role": "overlay",
-      "filename": "tray_001_overlay.jpg",
-      "url": "..."
-    }
+    { "role": "overlay", "filename": "tray_001_overlay.jpg", "url": "..." }
   ],
   "objects": [
     {
       "object_id": "obj_001",
       "source_label": "1",
       "bbox": { "x": 713, "y": 552, "w": 42, "h": 40 },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
+      "qc": { "contour_found": true, "ellipse_fit_ok": true },
       "traits": {
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.3,
-          "unit": "mm"
+          "value": 4.3, "unit": "mm"
         }
       }
     }
@@ -349,64 +275,63 @@ All pipelines registered with this framework return results in the same JSON env
 |-------|-------------|
 | `job_id` | UUID assigned by the module at request time |
 | `timestamp` | ISO 8601 timestamp of the analysis |
-| `pipeline.name` | Pipeline that produced the result |
-| `pipeline.version` | Pipeline version for reproducibility tracking |
-| `qc.analysis_pass` | `true` only when the result is reliable. If `false`, do not store trait values without manual review |
-| `qc.color_card_present` | Whether a color calibration card was detected and applied. If `false`, color-derived traits may be unreliable |
-| `qc.size_marker_detected` | Whether the size reference marker was found. If `false`, dimensional measurements are in pixels, not millimeters, and the `unit` field reflects this |
-| `objects[].object_id` | Sequential identifier assigned left-to-right, top-to-bottom. Consistent across repeated analyses of the same image |
-| `traits` keys | Follow `Human-readable name\|ONTOLOGY:ID` format. Value and unit are always explicit |
+| `pipeline.name` / `pipeline.version`| Which pipeline that produced the result, and its version |
+| `qc.analysis_pass` | `true` only when reliable. If `false`, do not store trait values without review |
+| `qc.color_card_present` | Whether a color card was detected and applied. If `false`, color traits may be unreliable |
+| `qc.size_marker_detected` | Whether the size marker was found. If `false`, dimensions are in **pixels, not mm**, and `unit` reflects that |
+| `objects[].object_id` | Sequential ID, left-to-right, top-to-bottom; stable across repeated analyses |
+| `traits` keys | Follow `Human-readable name\|ONTOLOGY:ID`; value and unit always explicit |
 
 ---
 
-## 7. Design Principles
+## Design Principles
 
-- **Reproducibility** — deterministic outputs and versioned pipelines; the same image always produces the same result
-- **Interoperability** — OpenAPI contract and BrAPI compatibility; trait keys follow IMGSTAT ontology for direct ingestion into BreedBase
-- **Modularity** — pipelines are pluggable; any compliant pipeline can register with the framework without changes to the integration layer
-- **Transparency** — QC flags and provenance are required fields, not optional additions
-- **Community extensibility** — the pipeline interface is an open standard; independent research groups can develop and publish compliant pipelines for any crop or trait class
-
----
-
-## 8. Reference Implementation: Seed Morphometry Pipeline
-
-The seed morphometry pipeline included in this repository is the reference implementation of the framework. It demonstrates how to satisfy the pipeline interface contract, structure a compliant repository, and expose analysis functionality via the framework's REST endpoint.
-
-The pipeline accepts photographs of plant seeds or organs placed alongside a color calibration card and a circular size marker. It segments each object individually, applies color correction, converts pixel measurements to millimeters using the size marker, and returns per-object morphometric traits keyed by IMGSTAT ontology identifiers.
-
-The pipeline is also available for direct use outside of BreedBase via CLI, Python API, or Docker — useful for standalone research workflows, batch processing, or evaluation before BreedBase deployment.
+- **Reproducibility** — deterministic outputs and versioned pipelines; the same image always produces the same result.
+- **Interoperability** — OpenAPI contract and BrAPI compatibility; trait keys follow the IMGSTAT ontology for direct ingestion into BreedBase.
+- **Modularity** — pipelines are pluggable; any compliant pipeline registers without changes to the integration layer.
+- **Transparency** — QC flags and provenance are required fields, not optional extras.
+- **Community extensibility** — the interface is an open standard; any research group can build and publish a compliant pipeline for any crop or trait class.
 
 ---
 
-### 8.1 How the Pipeline Works
+## Image capture requirements
 
-Each image is processed through these steps in order:
+The reference pipeline's accuracy depends on how the photo is taken. Every image must include:
 
-1. **Color card detection** — the calibration card is located and used to apply color correction, normalizing lighting variation across images and sessions
-2. **Size marker detection** — the circular size marker of known physical diameter establishes the pixel-to-millimeter conversion factor for the image
-3. **Reference masking** — the color card and size marker are masked out so they are not segmented as objects
-4. **Object segmentation** — seeds or organs are segmented using HSV color-space thresholding and morphological operations; connected component analysis identifies individual objects
-5. **Object labeling** — objects are labeled row-wise (left-to-right, top-to-bottom)
-6. **Morphometric extraction** — area, perimeter, ellipse diameters, solidity, and convex hull area are computed per object
-7. **Result packaging** — trait values, QC flags, and provenance metadata are assembled into the standardized output envelope
+- **A neutral, uncluttered background** (a plain matte sheet works well) so objects segment cleanly.
+- **One color calibration card**, fully visible and unobstructed, for lighting/color correction.
+- **One circular size marker of known diameter** (default assumed `0.75"`) for the pixel-to-millimeter conversion. If yours differs, pass the correct value (`--marker-diameter` / `marker_diameter_in`).
+- **Even, diffuse lighting** with minimal shadows and no glare on the seeds, card, or marker.
+- **Seeds/organs spread out** so they do not touch or overlap (touching objects may be merged).
+
+![Example of a correctly set up photo: seeds spread on a neutral background with a color card and circular size marker.](docs/img/capture_example.jpg)
+
+If the color card or size marker is not detected, the corresponding QC flag will be `false` — see [Troubleshooting](#troubleshooting).
 
 ---
 
-### 8.2 Installation
+## Running the reference pipeline
 
-#### Prerequisites
+The seed morphometry pipeline segments each object, applies color correction, converts pixels to millimeters using the size marker, and returns per-object morphometric traits keyed by IMGSTAT ontology IDs. It runs inside BreedBase or standalone via CLI, Python, or Docker.
 
-- Python 3.9 or higher
-- `pip`
-- The repository cloned locally:
+### How the pipeline works
+
+1. **Color card detection** — locate the card and apply color correction, normalizing lighting across images.
+2. **Size marker detection** — the marker of known diameter sets the pixel-to-millimeter factor.
+3. **Reference masking** — the card and marker are masked out so they aren't measured as objects.
+4. **Object segmentation** — seeds are segmented via HSV color-space thresholding and morphological operations; connected-component analysis identifies individual objects.
+5. **Object labeling** — objects labeled row-wise (left-to-right, top-to-bottom).
+6. **Morphometric extraction** — area, perimeter, ellipse diameters, solidity, and convex hull area computed per object.
+7. **Result packaging** — traits, QC flags, and provenance assembled into the output envelope.
+
+### Installation
+
+**Prerequisites:** Python 3.9+, `pip`, and the repo cloned locally:
 
 ```bash
 git clone https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module
 cd breedbase-image-analysis-module
 ```
-
-#### Install options
 
 **Core pipeline only** (CLI + Python API, no web server):
 
@@ -414,15 +339,11 @@ cd breedbase-image-analysis-module
 pip install .
 ```
 
-Sufficient for the CLI and Python API. Choose this if you do not need to run a local HTTP server.
-
-**With REST API server** (adds Connexion, Flask, and Gunicorn):
+**With REST API server** (adds Connexion, Flask, Gunicorn):
 
 ```bash
 pip install ".[api]"
 ```
-
-Choose this to serve the REST endpoint locally or deploy the server for BreedBase integration.
 
 **Editable install for development:**
 
@@ -430,67 +351,50 @@ Choose this to serve the REST endpoint locally or deploy the server for BreedBas
 pip install -e ".[api]"
 ```
 
-#### Verify installation
+Verify:
 
 ```bash
 bb-analyze --help
 ```
 
-If the command is not found, confirm that your Python environment's `bin` or `Scripts` directory is on your `PATH`.
+If not found, confirm your Python environment's `bin`/`Scripts` directory is on your `PATH`.
 
----
+### Command-Line Interface
 
-### 8.3 Usage: Command-Line Interface
-
-The `bb-analyze` command is the fastest way to run the pipeline on a single image outside of BreedBase. `--output-dir` is required — results are always written to files rather than printed to the terminal.
-
-#### Basic usage
+`bb-analyze` runs the pipeline on a single image. `--output-dir` is required — results are always written to files.
 
 ```bash
 bb-analyze path/to/image.jpg --output-dir ./results
 ```
 
-Writes two files to `./results/` and prints their paths:
+Writes and prints the paths to:
 
-```
-Overlay:  ./results/image_ResultImage_<job_id>.png
-Results:  ./results/image_metadata_<job_id>.json
-```
+- `image_metadata_<job_id>.json` — the full output envelope
+- `image_ResultImage_<job_id>.png` — your image with object boundaries and labels drawn
 
-- `image_metadata_<job_id>.json` — the full JSON output envelope (see [Section 6](#6-the-standardized-output-envelope))
-- `image_ResultImage_<job_id>.png` — the original image with object boundaries and labels drawn
-
-#### Choose output format
+**Output file type:**
 
 ```bash
-# Default: write results as JSON
-bb-analyze path/to/image.jpg --output-dir ./results --format json
-
-# Write results as CSV (one row per detected object)
-bb-analyze path/to/image.jpg --output-dir ./results --format csv
+bb-analyze path/to/image.jpg --output-dir ./results --format json   # default
+bb-analyze path/to/image.jpg --output-dir ./results --format csv    # one row per object
 ```
 
-The CSV format flattens the `objects` array into one row per detected object. Each row includes envelope-level metadata (job ID, timestamp, pipeline name/version, QC flags) repeated alongside the per-object fields and trait values. This is suited for direct import into spreadsheet tools; use JSON for programmatic or BreedBase use.
+CSV flattens the `objects` array into one row per object, repeating envelope-level metadata alongside each object's fields — convenient for spreadsheets. Use JSON for programmatic or BreedBase use.
 
-#### Emit all traits
+**How many traits:**
 
 ```bash
-# Default emits a single trait (proof-of-concept mode)
-# Use --output-mode all to extract all six morphometric traits
+# Default emits a single trait; use --output-mode all for all six morphometric traits.
 bb-analyze path/to/image.jpg --output-dir ./results --output-mode all
 ```
 
-#### Specify size marker diameter
+**Size marker diameter** (must match your physical marker, in inches; drives pixel→mm):
 
 ```bash
-# Default assumes a 0.75-inch circular marker
-# Override if your marker has a different known physical diameter
 bb-analyze path/to/image.jpg --output-dir ./results --marker-diameter 1.0
 ```
 
-The `--marker-diameter` value must match the physical diameter of the circular reference object present in your image, in inches. This value drives the pixel-to-millimeter conversion.
-
-#### Combining options
+**Combined:**
 
 ```bash
 bb-analyze path/to/image.jpg \
@@ -500,67 +404,45 @@ bb-analyze path/to/image.jpg \
   --marker-diameter 0.75
 ```
 
-On success, exits with code `0` and prints the paths to the overlay and results files. On failure, exits with code `1` and prints a JSON error to stdout.
+Exits `0` on success (prints file paths); exits `1` on failure (prints a JSON error to stdout).
 
----
+### Python API
 
-### 8.4 Usage: Python API
-
-The Python API exposes the pipeline as a pure function with no file I/O or side effects. Use this in notebooks, batch scripts, and custom pipelines.
-
-#### Basic call
+`analyze_image` is a pure function — no file I/O or side effects. Use it in notebooks and batch scripts.
 
 ```python
 from process_image import analyze_image
 
 result = analyze_image("path/to/image.jpg", output_mode="all")
 ```
-
-#### Checking image-level QC
+Check image-level QC:
 
 ```python
 print(result["qc"])
-# {
-#   'analysis_pass': True,
-#   'color_card_present': True,
-#   'size_marker_detected': True,
-#   'object_count': 65
-# }
+# {'analysis_pass': True, 'color_card_present': True,
+#  'size_marker_detected': True, 'object_count': 65}
 ```
 
-`analysis_pass` is `True` only when the color card, size marker, and at least one object were all successfully detected. If `False`, trait values may be unreliable.
+`analysis_pass` is `True` only when the color card, size marker, and at least one object were all detected.
 
-#### Accessing per-object traits
+Access per-object traits:
 
 ```python
 for obj in result["objects"]:
-    obj_id = obj["object_id"]
-    diameter = obj["traits"]["Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008"]
-    print(f"{obj_id}: {diameter['value']} {diameter['unit']}")
-# obj_001: 4.3 mm
-# obj_002: 4.1 mm
+    d = obj["traits"]["Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008"]
+    print(f"{obj['object_id']}: {d['value']} {d['unit']}")
 ```
 
-#### Return value reference
+**Return value:** `qc` (dict), `objects` (list), `output_mode` (str), `traits_emitted` (list), `overlay_img` (NumPy array of the annotated image).
 
-| Key | Type | Description |
-|-----|------|-------------|
-| `qc` | dict | Image-level QC flags |
-| `objects` | list | Per-object records, each with `object_id`, `bbox`, `qc`, and `traits` |
-| `output_mode` | str | `"single"` or `"all"` |
-| `traits_emitted` | list | Trait keys included in this result |
-| `overlay_img` | ndarray | NumPy array of the annotated result image |
-
-#### Batch processing example
+Batch example:
 
 ```python
 from pathlib import Path
 from process_image import analyze_image
 
-image_dir = Path("./session_images")
 results = []
-
-for img_path in sorted(image_dir.glob("*.jpg")):
+for img_path in sorted(Path("./session_images").glob("*.jpg")):
     result = analyze_image(str(img_path), output_mode="all")
     if result["qc"]["analysis_pass"]:
         for obj in result["objects"]:
@@ -569,33 +451,26 @@ for img_path in sorted(image_dir.glob("*.jpg")):
             results.append(row)
     else:
         print(f"WARNING: QC failed for {img_path.name} — skipping")
-
-# results is a list of flat dicts suitable for pandas or CSV export
+# results -> list of flat dicts, ready for pandas or CSV
 ```
 
----
+### Docker
 
-### 8.5 Usage: Docker
-
-Docker is the recommended deployment path for BreedBase integration and for researchers who prefer not to manage a Python environment.
-
-#### Pull the image
+Recommended for BreedBase integration and for anyone who prefers not to manage a Python environment.
 
 ```bash
-docker pull hkmanchi/sorghum-breedbase-image-pipeline:latest
+docker pull hkmanchi/sorghum-breedbase-image-pipeline:latest   # linux/amd64
 ```
 
-Architecture: `linux/amd64`
-
-#### Run the REST API server
+Run the REST API server:
 
 ```bash
 docker run -p 8000:8000 hkmanchi/sorghum-breedbase-image-pipeline:latest
 ```
 
-The server starts at `http://localhost:8000` and accepts requests as described in [Section 4](#4-the-api-contract). This is the standard deployment mode for BreedBase integration.
+Serves at `http://localhost:8000` (see [The API contract](#the-api-contract)).
 
-#### Analyze a local image directly
+Analyze a local image:
 
 ```bash
 docker run --rm \
@@ -605,19 +480,22 @@ docker run --rm \
   bb-analyze /images/tray_001.jpg --output-dir /results --output-mode all
 ```
 
-Mount your local `images/` and `results/` directories into the container. Results are written to your local `results/` directory.
-
-#### Using docker-compose
-
-```bash
-docker-compose up
-```
-
-See `docker-compose.yml` for port mapping and volume mount configuration.
+Or `docker-compose up` (see `docker-compose.yml` for ports and volumes).
 
 ---
 
-## 9. Repository Structure
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---------|-------------|-----|
+| `bb-analyze: command not found` | Python `bin`/`Scripts` not on `PATH` | Activate your environment or add it to `PATH` |
+| `size_marker_detected: false`, dimensions in pixels | Marker missing, obscured, or wrong assumed diameter | Ensure a clear circular marker is present; set `--marker-diameter` to its real size |
+| `color_card_present: false` | Color card missing, obscured, or poorly lit | Include a fully visible color card; improve lighting |
+| `object_count: 0` / no objects | Poor contrast, objects touching, cluttered background | Use a neutral background, spread objects apart, improve lighting |
+| `analysis_pass: false` | One or more of the above | Check the individual QC flags to see which step failed |
+
+---
+## Repository Structure
 
 ```
 breedbase-image-analysis-module/
@@ -630,7 +508,7 @@ breedbase-image-analysis-module/
 │   # Reference pipeline: seed morphometry
 ├── pipelines/
 │   ├── color_correction.py        # Color card detection and correction
-│   ├── ref_mask.py                # Color card and size marker masking
+│   ├── ref_mask.py                # Color card / size marker masking
 │   ├── seed_mask.py               # Object segmentation
 │   ├── object_labeling.py         # Row-wise object labeling
 │   ├── shape_analysis.py          # Morphometric trait calculation
@@ -638,15 +516,14 @@ breedbase-image-analysis-module/
 │   ├── image_math.py              # Image math utilities
 │   └── utils.py                   # Shared helpers
 │
-├── process_image.py               # analyze_image() — pure function
-│                                  # process_image() — CLI-facing wrapper
+├── process_image.py               # analyze_image() (pure) + process_image() (CLI wrapper)
 ├── cli.py                         # bb-analyze CLI entry point
-├── pyproject.toml                 # Package definition and dependencies
+├── pyproject.toml               
 │
 ├── tests/
-│   ├── test_process_image.py      # Pipeline integration tests
-│   ├── test_api.py                # HTTP-level API tests
-│   ├── conftest.py                # Shared fixtures
+│   ├── test_process_image.py
+│   ├── test_api.py
+│   ├── conftest.py
 │   └── fixtures/
 │       ├── sample_seeds.jpg
 │       └── expected_output.json   # Golden output for regression testing
@@ -656,33 +533,51 @@ breedbase-image-analysis-module/
 └── requirements.txt / requirements-dev.txt
 ```
 
-The `api/` directory is the integration framework layer. `pipelines/`, `process_image.py`, and `cli.py` are the reference pipeline. Future pipeline repositories reuse `api/` and replace everything else.
+`api/` is the reusable framework layer. `pipelines/`, `process_image.py`, and `cli.py` are the reference pipeline. Future pipeline repositories reuse `api/` and replace the rest.
 
 ---
 
-## 10. Reproducibility and Provenance
+## Reproducibility and provenance
 
-Every result from any compliant pipeline includes the following provenance fields, which the framework injects automatically:
+Every result includes provenance the framework injects automatically: `pipeline.name`, `pipeline.version`, `timestamp`, `input.image_filename`, and `job_id`. This supports IMGSTAT-style image-derived trait ontologies, QC/provenance tracking, and FAIR data principles.
 
-| Field | Description |
-|-------|-------------|
-| `pipeline.name` | Name of the pipeline that produced the result |
-| `pipeline.version` | Semantic version string |
-| `timestamp` | ISO 8601 analysis timestamp |
-| `input.image_filename` | Original input filename |
-| `job_id` | UUID for this analysis run |
+---
+## Status and maturity
 
-This ensures compatibility with:
-
-- IMGSTAT-style image-derived trait ontologies
-- QC and provenance tracking
-- FAIR data principles (Findable, Accessible, Interoperable, Reusable)
+The framework and reference pipeline are **deployed and operational in a dedicated BreedBase instance**, with confirmed end-to-end flow from image to stored observation. Not yet included: job queue, cloud storage, and other production-scale infrastructure (see [What this repository includes](#what-this-repository-includes)).
 
 ---
 
-## 11. Citation
+## Contributing
 
-If you use this framework or the reference pipeline in your research, please cite:
+This is an open standard — new pipelines and improvements are welcome. See `CONTRIBUTING.md` *(to be added)* for how to propose a pipeline, and run the conformance test kit *(to be added)* to verify your pipeline produces a valid envelope before submitting.
 
-*(Citation forthcoming)*
+---
 
+## License
+
+*(To be added — e.g., MIT / BSD-3-Clause / Apache-2.0. A license is required before others can reuse or extend this work.)*
+
+---
+
+## Citation
+
+If you use this framework or the reference pipeline, please cite it. A manuscript and Zenodo DOI are forthcoming; in the interim, cite this repository.
+
+```bibtex
+@software{breedbase_image_analysis_module,
+  title  = {BreedBase Image Analysis Module},
+  author = {Manchi, Heather and USDA-ARS-GBRU},
+  year   = {2026},
+  url    = {https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module}
+}
+```
+
+---
+
+<!--
+  IMAGE ASSETS TO CREATE (referenced above; add under docs/img/):
+   - architecture.png     — Flowchart #1 from the poster blueprint (BreedBase ↔ Module ↔ pipelines)
+   - example_overlay.png  — sample_seeds.jpg (raw) next to its _ResultImage_ overlay
+   - capture_example.png  — a correctly set up photo (neutral background, color card, size marker)
+-->
