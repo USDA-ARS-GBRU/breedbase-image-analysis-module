@@ -14,15 +14,49 @@ This project fixes that. It defines a **standard connector** between [BreedBase]
 
 ## Architecture at a glance
 
-(docs/img/architecture.tiff)
-
 *The module sits between BreedBase and the analysis pipelines. BreedBase never calls a pipeline directly — it hands images to the module, and the module routes, validates, and returns standardized results.*
 
+![Architecture diagram: BreedBase submits images to the Image Analysis Module, which routes them to any registered pipeline, validates the results, and returns standardized observations to BreedBase.](docs/img/architecture.tiff)
 
 *BreedBase appears twice because it both **sends** the image out for analysis and **receives** the finished measurements back.*
 
+---
+
+## Quick start (about 2 minutes)
+
+Run the reference pipeline on the sample image bundled with this repository — no local Python setup required.
+
+```bash
+docker pull hkmanchi/sorghum-breedbase-image-pipeline:latest
+
+docker run --rm \
+  -v "$(pwd)/results:/results" \
+  hkmanchi/sorghum-breedbase-image-pipeline:latest \
+  bb-analyze /app/tests/fixtures/sample_seeds.jpg --output-dir /results --output-mode all
+```
+
+You will get two files in `./results/`:
+
+- an **annotated overlay image** — your photo with each seed outlined and numbered
+- a **results file** — every trait, for every seed, with units
+
+Example output:
+
+| Object | Max diameter | Min diameter | Area |
+|--------|-------------|-------------|------|
+| obj_001 | 4.3 mm | 3.1 mm | 14.2 mm² |
+| obj_002 | 4.1 mm | 3.0 mm | 13.6 mm² |
+
+
+
+![Example: an image of seeds on the left; the same image with each seed outlined and labeled on the right.](docs/img/example_overlay.png)
+
+> **Note on the name:** the Docker image is named for sorghum, the crop this pipeline was first validated on, but the seed morphometry pipeline is **crop-agnostic** — it works on any seeds or small organs photographed with the required reference objects (see [Image capture requirements](#image-capture-requirements)).
+
+To go further, see [Running the reference pipeline](#running-the-reference-pipeline).
 
 ---
+
 ## Table of Contents
 
 1. [Overview](#1-overview)
