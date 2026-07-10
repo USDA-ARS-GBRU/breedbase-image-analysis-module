@@ -170,9 +170,9 @@ result = response.json()
 
 ### BrAPI compatibility
 
-Trait keys use the format `Human-readable name|IMGSTAT:ID` (e.g., `Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008`) and are structured for direct ingestion into BreedBase as BrAPI-compatible observations, with an explicit unit on every value.
+Trait keys use the format `Human-readable name|IMGSTAT:ID` (e.g., `Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008`) and are structured for direct ingestion into BreedBase as BrAPI-compatible observations. The unit is not free-standing metadata: each IMGSTAT term bundles a trait, a measurement method, and a scale (the unit), so the pipeline links every value to the IMGSTAT term whose scale matches the unit it measured in — the term, not a free-form string, is what fixes the unit.
 
-**The IMGSTAT ID is authoritative.** The ID (e.g., `IMGSTAT:0000008`) is the canonical identifier for a trait; the human-readable label is *not* free text and must exactly match the official IMGSTAT label registered for that ID. Pipelines must emit valid IMGSTAT IDs and validate their output against a **pinned IMGSTAT release version**, so that any result keyed to a given ID means the same thing across pipelines, programs, and time. For the authoritative term list and release versions, see the [IMGSTAT ontology repository](https://github.com/USDA-ARS-GBRU/imgstat-ontology).
+**The IMGSTAT ID is authoritative.** The ID (e.g., `IMGSTAT:0000008`) is the canonical identifier for a trait; the human-readable label is *not* free text and must exactly match the official IMGSTAT label registered for that ID. Pipelines must emit valid IMGSTAT IDs and validate their output against a **pinned IMGSTAT release version**, so that any result keyed to a given ID means the same thing across pipelines, programs, and time. For the authoritative term list and release versions, see the [IMGSTAT ontology repo](https://github.com/USDA-ARS-GBRU/imgstat-ontology).
 
 ---
 
@@ -204,12 +204,13 @@ Minimum QC block:
 ### Pipeline requirements checklist
 
 - [ ] Deterministic — the same image and parameters always produce the same output
-- [ ] All trait values include explicit units
+- [ ] Every trait value is linked to an IMGSTAT term whose scale (unit) matches how it was measured
 - [ ] `pipeline.name` and `pipeline.version` present in every result
 - [ ] `qc.analysis_pass` accurately reflects reliability
 - [ ] No hard-coded file paths
 - [ ] Output written only to the designated output directory
-- [ ] Installable as a Python package or runnable as a Docker container
+- [ ] Runnable as a Docker container
+*- [ ] Installable as a Python package or runnable as a Docker container*
 
 ### Recommended repository structure
 
@@ -283,7 +284,7 @@ Every compliant pipeline returns the same JSON structure — that uniformity is 
 | `qc.color_card_present` | Whether a color card was detected and applied. If `false`, color traits may be unreliable |
 | `qc.size_marker_detected` | Whether the size marker was found. If `false`, dimensions are in **pixels, not mm**, and `unit` reflects that |
 | `objects[].object_id` | Sequential ID, left-to-right, top-to-bottom; stable across repeated analyses |
-| `traits` keys | Follow `Human-readable name\|ONTOLOGY:ID`; value and unit always explicit |
+| `traits` keys | Format `Human-readable name\|IMGSTAT:ID`. The **IMGSTAT ID is authoritative**; the label must exactly match the official IMGSTAT label for that ID (not free text) and is validated against a pinned IMGSTAT release. Each value is reported in the scale (unit) defined by its IMGSTAT term, so the term — not a free-form unit string — is what fixes the unit. See the [IMGSTAT ontology repo](https://github.com/USDA-ARS-GBRU/imgstat-ontology)
 
 ---
 
