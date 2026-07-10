@@ -20,8 +20,6 @@ This project fixes that. It defines a **standard connector** between [BreedBase]
 
 ---
 
----
-
 ## Who should read this
 
 | I am… | I want to… | Start at |
