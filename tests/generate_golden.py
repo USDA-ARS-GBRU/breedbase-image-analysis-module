@@ -49,10 +49,10 @@ def main():
         json.dump(clean, f, indent=2)
 
     print(f"Written:  {out_path}")
-    print(f"  pipeline:     {clean['pipeline']}")
-    print(f"  output_mode:  {clean['output_mode']}")
-    print(f"  qc:           {clean['qc']}")
-    print(f"  objects:      {len(clean['objects'])}")
+    print(f"  pipeline:       {clean['pipeline']}")
+    print(f"  schema_version: {clean['schema_version']}")
+    print(f"  qc:             {clean['qc']}")
+    print(f"  objects:        {len(clean['objects'])}")
 
 
 if __name__ == "__main__":

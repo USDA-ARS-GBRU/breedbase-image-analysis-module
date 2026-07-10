@@ -1,4 +1,5 @@
 {
+  "schema_version": "1.0",
   "pipeline": {
     "name": "seed_size_shape",
     "version": "0.1.0"
@@ -9,7 +10,6 @@
     "size_marker_detected": true,
     "object_count": 65
   },
-  "output_mode": "all",
   "traits_emitted": [
     "Object Area From Segmentation Mask|IMGSTAT:0000006",
     "Object Convex Hull Area|IMGSTAT:0000007",
@@ -24,9 +24,9 @@
       "source_label": "1",
       "bbox": {
         "x": 713,
-        "y": 552,
-        "w": 42,
-        "h": 40
+        "y": 554,
+        "w": 39,
+        "h": 36
       },
       "qc": {
         "contour_found": true,
@@ -34,27 +34,27 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 12.01,
+          "value": 10.43,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 12.15,
+          "value": 10.32,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.39,
+          "value": 13.64,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9889,
+          "value": 1.0111,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.3,
+          "value": 3.91,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.4,
+          "value": 3.26,
           "unit": "mm"
         }
       }
@@ -63,10 +63,10 @@
       "object_id": "obj_002",
       "source_label": "2",
       "bbox": {
-        "x": 895,
-        "y": 589,
-        "w": 41,
-        "h": 44
+        "x": 896,
+        "y": 590,
+        "w": 38,
+        "h": 42
       },
       "qc": {
         "contour_found": true,
@@ -74,27 +74,27 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.46,
+          "value": 12.19,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.42,
+          "value": 12.05,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.8,
+          "value": 14.94,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0031,
+          "value": 1.012,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.59,
+          "value": 4.4,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.86,
+          "value": 3.37,
           "unit": "mm"
         }
       }
@@ -103,10 +103,10 @@
       "object_id": "obj_003",
       "source_label": "3",
       "bbox": {
-        "x": 463,
-        "y": 638,
-        "w": 46,
-        "h": 47
+        "x": 466,
+        "y": 640,
+        "w": 39,
+        "h": 41
       },
       "qc": {
         "contour_found": true,
@@ -114,27 +114,27 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.51,
+          "value": 12.39,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.59,
+          "value": 12.31,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.22,
+          "value": 14.53,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9943,
+          "value": 1.0065,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.72,
+          "value": 4.26,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.05,
+          "value": 3.56,
           "unit": "mm"
         }
       }
@@ -144,9 +144,9 @@
       "source_label": "4",
       "bbox": {
         "x": 733,
-        "y": 638,
-        "w": 37,
-        "h": 46
+        "y": 639,
+        "w": 36,
+        "h": 45
       },
       "qc": {
         "contour_found": true,
@@ -154,27 +154,27 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 13.14,
+          "value": 12.06,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 12.92,
+          "value": 12.1,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 13.77,
+          "value": 14.81,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0169,
+          "value": 0.9971,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.43,
+          "value": 4.26,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.62,
+          "value": 3.44,
           "unit": "mm"
         }
       }
@@ -183,10 +183,10 @@
       "object_id": "obj_005",
       "source_label": "5",
       "bbox": {
-        "x": 1027,
-        "y": 638,
-        "w": 36,
-        "h": 41
+        "x": 1030,
+        "y": 639,
+        "w": 29,
+        "h": 39
       },
       "qc": {
         "contour_found": true,
@@ -194,27 +194,27 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 10.6,
+          "value": 8.41,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 10.64,
+          "value": 8.27,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 13.33,
+          "value": 12.43,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9958,
+          "value": 1.0168,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.03,
+          "value": 3.73,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.2,
+          "value": 2.73,
           "unit": "mm"
         }
       }
@@ -223,10 +223,10 @@
       "object_id": "obj_006",
       "source_label": "6",
       "bbox": {
-        "x": 1201,
-        "y": 643,
-        "w": 46,
-        "h": 49
+        "x": 1204,
+        "y": 644,
+        "w": 41,
+        "h": 47
       },
       "qc": {
         "contour_found": true,
@@ -234,27 +234,27 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 17.17,
+          "value": 14.02,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 17.45,
+          "value": 14.09,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 19.15,
+          "value": 15.08,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.984,
+          "value": 0.9954,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.86,
+          "value": 4.53,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.34,
+          "value": 3.79,
           "unit": "mm"
         }
       }
@@ -263,10 +263,10 @@
       "object_id": "obj_007",
       "source_label": "7",
       "bbox": {
-        "x": 1357,
-        "y": 645,
-        "w": 49,
-        "h": 51
+        "x": 1358,
+        "y": 646,
+        "w": 47,
+        "h": 46
       },
       "qc": {
         "contour_found": true,
@@ -274,27 +274,27 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 18.78,
+          "value": 16.05,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 19.56,
+          "value": 16.19,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 19.89,
+          "value": 16.19,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9601,
+          "value": 0.9914,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.07,
+          "value": 4.85,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.59,
+          "value": 4.16,
           "unit": "mm"
         }
       }
@@ -303,169 +303,9 @@
       "object_id": "obj_008",
       "source_label": "8",
       "bbox": {
-        "x": 553,
-        "y": 687,
-        "w": 44,
-        "h": 52
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 16.38,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 16.7,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.43,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9809,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.95,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.06,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_009",
-      "source_label": "9",
-      "bbox": {
-        "x": 674,
-        "y": 703,
-        "w": 40,
-        "h": 49
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.27,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.38,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.3,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9924,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.74,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.7,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_010",
-      "source_label": "10",
-      "bbox": {
-        "x": 743,
-        "y": 711,
-        "w": 43,
-        "h": 42
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.56,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.58,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.94,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9983,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.26,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.21,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_011",
-      "source_label": "11",
-      "bbox": {
-        "x": 845,
-        "y": 716,
-        "w": 42,
-        "h": 44
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.76,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.73,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.22,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0017,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.41,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.11,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_012",
-      "source_label": "12",
-      "bbox": {
-        "x": 992,
+        "x": 558,
         "y": 688,
-        "w": 44,
+        "w": 36,
         "h": 53
       },
       "qc": {
@@ -474,78 +314,38 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 16.82,
+          "value": 14.17,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 17.04,
+          "value": 14.17,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.87,
+          "value": 16.1,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9871,
+          "value": 1.0,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.09,
+          "value": 5.1,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.06,
+          "value": 3.39,
           "unit": "mm"
         }
       }
     },
     {
-      "object_id": "obj_013",
-      "source_label": "13",
+      "object_id": "obj_009",
+      "source_label": "9",
       "bbox": {
-        "x": 1108,
-        "y": 693,
-        "w": 44,
-        "h": 43
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.26,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.39,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.07,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9914,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.58,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.83,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_014",
-      "source_label": "14",
-      "bbox": {
-        "x": 1264,
-        "y": 716,
-        "w": 44,
+        "x": 676,
+        "y": 704,
+        "w": 35,
         "h": 48
       },
       "qc": {
@@ -554,27 +354,227 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.93,
+          "value": 12.38,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 16.08,
+          "value": 12.29,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.32,
+          "value": 14.41,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.991,
+          "value": 1.0073,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.85,
+          "value": 4.63,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.04,
+          "value": 3.31,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_010",
+      "source_label": "10",
+      "bbox": {
+        "x": 744,
+        "y": 712,
+        "w": 42,
+        "h": 43
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.29,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.31,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.89,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9985,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.24,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.85,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_011",
+      "source_label": "11",
+      "bbox": {
+        "x": 848,
+        "y": 716,
+        "w": 37,
+        "h": 45
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.25,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.1,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.84,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0114,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.6,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.52,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_012",
+      "source_label": "12",
+      "bbox": {
+        "x": 993,
+        "y": 691,
+        "w": 41,
+        "h": 47
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 14.32,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 14.4,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.65,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9945,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.8,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.65,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_013",
+      "source_label": "13",
+      "bbox": {
+        "x": 1112,
+        "y": 694,
+        "w": 38,
+        "h": 42
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 12.18,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 12.0,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.14,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0149,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.41,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.4,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_014",
+      "source_label": "14",
+      "bbox": {
+        "x": 1266,
+        "y": 716,
+        "w": 40,
+        "h": 48
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.72,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.7,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.02,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0015,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.63,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.62,
           "unit": "mm"
         }
       }
@@ -585,487 +585,7 @@
       "bbox": {
         "x": 750,
         "y": 778,
-        "w": 47,
-        "h": 43
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.83,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.8,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.46,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.002,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.46,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.08,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_016",
-      "source_label": "16",
-      "bbox": {
-        "x": 968,
-        "y": 770,
         "w": 46,
-        "h": 46
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.73,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.76,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.59,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9981,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.81,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.02,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_017",
-      "source_label": "17",
-      "bbox": {
-        "x": 1088,
-        "y": 756,
-        "w": 39,
-        "h": 50
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.66,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.81,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.39,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9899,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.91,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.67,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_018",
-      "source_label": "18",
-      "bbox": {
-        "x": 585,
-        "y": 804,
-        "w": 50,
-        "h": 45
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 17.51,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 17.66,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.68,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.991,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.14,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.18,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_019",
-      "source_label": "19",
-      "bbox": {
-        "x": 1154,
-        "y": 806,
-        "w": 46,
-        "h": 40
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 13.17,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 13.24,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.66,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9947,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.28,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.78,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_020",
-      "source_label": "20",
-      "bbox": {
-        "x": 1226,
-        "y": 816,
-        "w": 50,
-        "h": 43
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 16.44,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 16.41,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.86,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0021,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.9,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.12,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_021",
-      "source_label": "21",
-      "bbox": {
-        "x": 1316,
-        "y": 810,
-        "w": 39,
-        "h": 43
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 12.64,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 12.84,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.86,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9841,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.38,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.54,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_022",
-      "source_label": "22",
-      "bbox": {
-        "x": 424,
-        "y": 868,
-        "w": 47,
-        "h": 44
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.62,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.72,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.77,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9929,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.91,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.67,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_023",
-      "source_label": "23",
-      "bbox": {
-        "x": 705,
-        "y": 841,
-        "w": 41,
-        "h": 44
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 13.83,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 13.97,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.28,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9904,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.79,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.57,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_024",
-      "source_label": "24",
-      "bbox": {
-        "x": 806,
-        "y": 852,
-        "w": 45,
-        "h": 45
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.2,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.26,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.6,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9958,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.59,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.05,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_025",
-      "source_label": "25",
-      "bbox": {
-        "x": 889,
-        "y": 838,
-        "w": 46,
-        "h": 46
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.64,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.8,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.95,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9902,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.87,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.95,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_026",
-      "source_label": "26",
-      "bbox": {
-        "x": 1007,
-        "y": 870,
-        "w": 44,
-        "h": 53
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 17.74,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 17.82,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.66,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9958,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.34,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.08,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_027",
-      "source_label": "27",
-      "bbox": {
-        "x": 1077,
-        "y": 880,
-        "w": 44,
         "h": 42
       },
       "qc": {
@@ -1074,118 +594,38 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.26,
+          "value": 13.51,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.35,
+          "value": 13.6,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.41,
+          "value": 14.85,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9941,
+          "value": 0.9938,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.42,
+          "value": 4.33,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.95,
+          "value": 3.83,
           "unit": "mm"
         }
       }
     },
     {
-      "object_id": "obj_028",
-      "source_label": "28",
+      "object_id": "obj_016",
+      "source_label": "16",
       "bbox": {
-        "x": 1168,
-        "y": 892,
-        "w": 52,
-        "h": 44
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 17.41,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 17.64,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.07,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9865,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.07,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.22,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_029",
-      "source_label": "29",
-      "bbox": {
-        "x": 1300,
-        "y": 881,
-        "w": 39,
-        "h": 46
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 12.97,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 13.04,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.41,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9943,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.38,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.62,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_030",
-      "source_label": "30",
-      "bbox": {
-        "x": 1369,
-        "y": 906,
-        "w": 44,
+        "x": 971,
+        "y": 771,
+        "w": 42,
         "h": 45
       },
       "qc": {
@@ -1194,39 +634,39 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.43,
+          "value": 13.7,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.49,
+          "value": 13.78,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.45,
+          "value": 15.83,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9962,
+          "value": 0.9942,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.42,
+          "value": 4.69,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.01,
+          "value": 3.58,
           "unit": "mm"
         }
       }
     },
     {
-      "object_id": "obj_031",
-      "source_label": "31",
+      "object_id": "obj_017",
+      "source_label": "17",
       "bbox": {
-        "x": 584,
-        "y": 921,
-        "w": 56,
-        "h": 40
+        "x": 1090,
+        "y": 758,
+        "w": 36,
+        "h": 48
       },
       "qc": {
         "contour_found": true,
@@ -1234,23 +674,143 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 16.49,
+          "value": 12.43,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 16.63,
+          "value": 12.28,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.44,
+          "value": 14.2,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9913,
+          "value": 1.0122,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.34,
+          "value": 4.58,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.31,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_018",
+      "source_label": "18",
+      "bbox": {
+        "x": 587,
+        "y": 805,
+        "w": 46,
+        "h": 44
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 15.09,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 15.16,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 16.0,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9951,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.75,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.89,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_019",
+      "source_label": "19",
+      "bbox": {
+        "x": 1156,
+        "y": 807,
+        "w": 44,
+        "h": 38
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 12.05,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 11.93,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.12,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0104,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.11,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.59,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_020",
+      "source_label": "20",
+      "bbox": {
+        "x": 1229,
+        "y": 816,
+        "w": 46,
+        "h": 42
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 14.22,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 14.13,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.43,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0067,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.61,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
@@ -1260,413 +820,13 @@
       }
     },
     {
-      "object_id": "obj_032",
-      "source_label": "32",
+      "object_id": "obj_021",
+      "source_label": "21",
       "bbox": {
-        "x": 704,
-        "y": 928,
-        "w": 47,
-        "h": 49
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 17.44,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 17.62,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 18.12,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9893,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.2,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.11,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_033",
-      "source_label": "33",
-      "bbox": {
-        "x": 881,
-        "y": 924,
-        "w": 40,
-        "h": 43
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 12.97,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 13.0,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.76,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9977,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.24,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.77,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_034",
-      "source_label": "34",
-      "bbox": {
-        "x": 944,
-        "y": 901,
-        "w": 44,
-        "h": 55
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 17.34,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 17.58,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.07,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9861,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.3,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.04,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_035",
-      "source_label": "35",
-      "bbox": {
-        "x": 388,
-        "y": 966,
-        "w": 45,
-        "h": 52
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 16.63,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 17.0,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.72,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9781,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.95,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.13,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_036",
-      "source_label": "36",
-      "bbox": {
-        "x": 511,
-        "y": 986,
-        "w": 43,
-        "h": 47
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.65,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.64,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.29,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0006,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.14,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.77,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_037",
-      "source_label": "37",
-      "bbox": {
-        "x": 630,
-        "y": 970,
-        "w": 43,
-        "h": 48
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 16.62,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 16.97,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.66,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9795,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.15,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.02,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_038",
-      "source_label": "38",
-      "bbox": {
-        "x": 793,
-        "y": 968,
-        "w": 38,
-        "h": 43
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 12.25,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 12.24,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.07,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0008,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.23,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.56,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_039",
-      "source_label": "39",
-      "bbox": {
-        "x": 1004,
-        "y": 976,
-        "w": 44,
-        "h": 42
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.77,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.67,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.77,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0068,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.51,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.0,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_040",
-      "source_label": "40",
-      "bbox": {
-        "x": 1095,
-        "y": 956,
-        "w": 42,
-        "h": 47
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.18,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.32,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.39,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9906,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.66,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.01,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_041",
-      "source_label": "41",
-      "bbox": {
-        "x": 1232,
-        "y": 955,
-        "w": 48,
-        "h": 45
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 16.78,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 16.76,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.83,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0009,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.64,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.46,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_042",
-      "source_label": "42",
-      "bbox": {
-        "x": 1346,
-        "y": 985,
+        "x": 1319,
+        "y": 810,
         "w": 36,
-        "h": 46
+        "h": 43
       },
       "qc": {
         "contour_found": true,
@@ -1674,679 +834,119 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 11.95,
+          "value": 11.45,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 11.35,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 13.25,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0096,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.4,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.16,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_022",
+      "source_label": "22",
+      "bbox": {
+        "x": 427,
+        "y": 869,
+        "w": 44,
+        "h": 41
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 12.36,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 12.29,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.44,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0061,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.58,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.3,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_023",
+      "source_label": "23",
+      "bbox": {
+        "x": 706,
+        "y": 843,
+        "w": 38,
+        "h": 44
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
           "value": 12.15,
           "unit": "mm^2"
         },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 12.05,
+          "unit": "mm^2"
+        },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.27,
+          "value": 14.15,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9836,
+          "value": 1.0087,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.41,
+          "value": 4.65,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.32,
+          "value": 3.21,
           "unit": "mm"
         }
       }
     },
     {
-      "object_id": "obj_043",
-      "source_label": "43",
+      "object_id": "obj_024",
+      "source_label": "24",
       "bbox": {
-        "x": 889,
-        "y": 992,
+        "x": 807,
+        "y": 854,
         "w": 42,
-        "h": 39
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 12.27,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 12.14,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 13.68,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0111,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.35,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.46,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_044",
-      "source_label": "44",
-      "bbox": {
-        "x": 1292,
-        "y": 1018,
-        "w": 48,
-        "h": 44
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.16,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.46,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.23,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9804,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.54,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.09,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_045",
-      "source_label": "45",
-      "bbox": {
-        "x": 657,
-        "y": 1050,
-        "w": 43,
-        "h": 48
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.96,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.38,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.52,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9728,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.59,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.02,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_046",
-      "source_label": "46",
-      "bbox": {
-        "x": 768,
-        "y": 1054,
-        "w": 39,
-        "h": 51
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.03,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.14,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.76,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9926,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.98,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.47,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_047",
-      "source_label": "47",
-      "bbox": {
-        "x": 950,
-        "y": 1071,
-        "w": 49,
-        "h": 44
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 16.8,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 16.58,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.69,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0132,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.87,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.22,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_048",
-      "source_label": "48",
-      "bbox": {
-        "x": 1110,
-        "y": 1065,
-        "w": 48,
-        "h": 45
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.42,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.54,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.5,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.992,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.86,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.9,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_049",
-      "source_label": "49",
-      "bbox": {
-        "x": 1177,
-        "y": 1039,
-        "w": 44,
-        "h": 46
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.25,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.24,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.57,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0007,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.75,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.93,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_050",
-      "source_label": "50",
-      "bbox": {
-        "x": 1270,
-        "y": 1057,
-        "w": 43,
-        "h": 50
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.45,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.65,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.79,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9861,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.7,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.82,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_051",
-      "source_label": "51",
-      "bbox": {
-        "x": 465,
-        "y": 1096,
-        "w": 43,
-        "h": 49
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.46,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.51,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.65,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9968,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.81,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.94,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_052",
-      "source_label": "52",
-      "bbox": {
-        "x": 529,
-        "y": 1074,
-        "w": 46,
-        "h": 44
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.5,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.66,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.18,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9895,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.61,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.13,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_053",
-      "source_label": "53",
-      "bbox": {
-        "x": 885,
-        "y": 1075,
-        "w": 40,
-        "h": 45
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.51,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.43,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.3,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0055,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.61,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.86,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_054",
-      "source_label": "54",
-      "bbox": {
-        "x": 1060,
-        "y": 1081,
-        "w": 41,
-        "h": 53
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 17.1,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 17.02,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.54,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0047,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.31,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.94,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_055",
-      "source_label": "55",
-      "bbox": {
-        "x": 1369,
-        "y": 1077,
-        "w": 45,
-        "h": 44
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.11,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.34,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.12,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9848,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.01,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.71,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_056",
-      "source_label": "56",
-      "bbox": {
-        "x": 592,
-        "y": 1128,
-        "w": 36,
-        "h": 40
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 10.31,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 10.63,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.21,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9696,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 3.87,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.34,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_057",
-      "source_label": "57",
-      "bbox": {
-        "x": 693,
-        "y": 1136,
-        "w": 36,
-        "h": 38
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 11.0,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 11.17,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.28,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9844,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 3.85,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.49,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_058",
-      "source_label": "58",
-      "bbox": {
-        "x": 843,
-        "y": 1113,
-        "w": 43,
-        "h": 46
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 14.3,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 14.68,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.17,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9742,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.76,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.71,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_059",
-      "source_label": "59",
-      "bbox": {
-        "x": 1210,
-        "y": 1133,
-        "w": 43,
-        "h": 42
+        "h": 43
       },
       "qc": {
         "contour_found": true,
@@ -2358,19 +958,259 @@
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 13.68,
+          "value": 13.67,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 14.68,
+          "value": 14.29,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0073,
+          "value": 1.008,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.41,
+          "value": 4.4,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.82,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_025",
+      "source_label": "25",
+      "bbox": {
+        "x": 891,
+        "y": 839,
+        "w": 41,
+        "h": 45
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.58,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.56,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.7,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0015,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.66,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.56,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_026",
+      "source_label": "26",
+      "bbox": {
+        "x": 1008,
+        "y": 871,
+        "w": 42,
+        "h": 52
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 16.02,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 16.01,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 16.48,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0006,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 5.14,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.82,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_027",
+      "source_label": "27",
+      "bbox": {
+        "x": 1078,
+        "y": 880,
+        "w": 41,
+        "h": 43
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.23,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.18,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.4,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0034,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.48,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.61,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_028",
+      "source_label": "28",
+      "bbox": {
+        "x": 1169,
+        "y": 893,
+        "w": 50,
+        "h": 43
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 15.13,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 15.04,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.94,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.006,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.62,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 4.04,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_029",
+      "source_label": "29",
+      "bbox": {
+        "x": 1301,
+        "y": 882,
+        "w": 35,
+        "h": 46
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 11.58,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 11.49,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 13.44,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0078,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.29,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.31,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_030",
+      "source_label": "30",
+      "bbox": {
+        "x": 1370,
+        "y": 907,
+        "w": 43,
+        "h": 41
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 12.61,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 12.62,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.63,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9992,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.02,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
@@ -2380,13 +1220,13 @@
       }
     },
     {
-      "object_id": "obj_060",
-      "source_label": "60",
+      "object_id": "obj_031",
+      "source_label": "31",
       "bbox": {
-        "x": 1075,
-        "y": 1149,
-        "w": 44,
-        "h": 55
+        "x": 589,
+        "y": 922,
+        "w": 49,
+        "h": 39
       },
       "qc": {
         "contour_found": true,
@@ -2394,15 +1234,175 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 18.77,
+          "value": 14.11,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 18.7,
+          "value": 14.24,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.42,
+          "value": 15.99,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9913,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.75,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.67,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_032",
+      "source_label": "32",
+      "bbox": {
+        "x": 706,
+        "y": 929,
+        "w": 43,
+        "h": 47
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 14.99,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 15.12,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 16.16,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9911,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 5.03,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.69,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_033",
+      "source_label": "33",
+      "bbox": {
+        "x": 884,
+        "y": 925,
+        "w": 35,
+        "h": 41
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 11.41,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 11.26,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 13.26,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0141,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.15,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.34,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_034",
+      "source_label": "34",
+      "bbox": {
+        "x": 946,
+        "y": 902,
+        "w": 40,
+        "h": 53
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 15.51,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 15.5,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 16.17,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0006,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 5.12,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.71,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_035",
+      "source_label": "35",
+      "bbox": {
+        "x": 391,
+        "y": 967,
+        "w": 38,
+        "h": 50
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.59,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.54,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.12,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
@@ -2410,7 +1410,247 @@
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.38,
+          "value": 4.74,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.52,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_036",
+      "source_label": "36",
+      "bbox": {
+        "x": 513,
+        "y": 987,
+        "w": 39,
+        "h": 46
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.47,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.26,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.95,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0161,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.88,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.41,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_037",
+      "source_label": "37",
+      "bbox": {
+        "x": 631,
+        "y": 970,
+        "w": 40,
+        "h": 49
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 15.05,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 14.93,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 16.05,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.008,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 5.03,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.67,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_038",
+      "source_label": "38",
+      "bbox": {
+        "x": 796,
+        "y": 969,
+        "w": 33,
+        "h": 43
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 10.81,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 10.82,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 13.51,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9991,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.23,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.15,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_039",
+      "source_label": "39",
+      "bbox": {
+        "x": 1004,
+        "y": 977,
+        "w": 43,
+        "h": 40
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.38,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.17,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 13.88,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0159,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.45,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.66,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_040",
+      "source_label": "40",
+      "bbox": {
+        "x": 1098,
+        "y": 958,
+        "w": 39,
+        "h": 44
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.5,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.27,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.49,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0176,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.58,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.61,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_041",
+      "source_label": "41",
+      "bbox": {
+        "x": 1232,
+        "y": 956,
+        "w": 46,
+        "h": 44
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 15.03,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 14.9,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.26,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0083,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.35,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
@@ -2420,11 +1660,931 @@
       }
     },
     {
+      "object_id": "obj_042",
+      "source_label": "42",
+      "bbox": {
+        "x": 1350,
+        "y": 987,
+        "w": 30,
+        "h": 40
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 9.43,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 9.34,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 12.41,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0096,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 3.9,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 2.95,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_043",
+      "source_label": "43",
+      "bbox": {
+        "x": 889,
+        "y": 993,
+        "w": 41,
+        "h": 38
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 11.74,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 11.61,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.05,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0116,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.34,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.29,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_044",
+      "source_label": "44",
+      "bbox": {
+        "x": 1294,
+        "y": 1020,
+        "w": 44,
+        "h": 38
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 12.49,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 12.35,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.35,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0113,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.18,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.65,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_045",
+      "source_label": "45",
+      "bbox": {
+        "x": 660,
+        "y": 1051,
+        "w": 38,
+        "h": 48
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 12.72,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 12.86,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 16.16,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9888,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.47,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.5,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_046",
+      "source_label": "46",
+      "bbox": {
+        "x": 770,
+        "y": 1055,
+        "w": 35,
+        "h": 51
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.37,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.21,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.06,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0121,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.9,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.34,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_047",
+      "source_label": "47",
+      "bbox": {
+        "x": 952,
+        "y": 1072,
+        "w": 44,
+        "h": 42
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 14.36,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 14.13,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.3,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0166,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.58,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.84,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_048",
+      "source_label": "48",
+      "bbox": {
+        "x": 1111,
+        "y": 1066,
+        "w": 45,
+        "h": 41
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.29,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.27,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.82,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0011,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.58,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.62,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_049",
+      "source_label": "49",
+      "bbox": {
+        "x": 1177,
+        "y": 1040,
+        "w": 42,
+        "h": 44
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.53,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.57,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.06,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9971,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.45,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.72,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_050",
+      "source_label": "50",
+      "bbox": {
+        "x": 1274,
+        "y": 1058,
+        "w": 36,
+        "h": 50
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 12.84,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 12.68,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 13.84,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0126,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.7,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.37,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_051",
+      "source_label": "51",
+      "bbox": {
+        "x": 468,
+        "y": 1097,
+        "w": 38,
+        "h": 47
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.18,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.18,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.8,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.54,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.54,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_052",
+      "source_label": "52",
+      "bbox": {
+        "x": 533,
+        "y": 1075,
+        "w": 37,
+        "h": 41
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 12.26,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 12.17,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.33,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0074,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.18,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.61,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_053",
+      "source_label": "53",
+      "bbox": {
+        "x": 886,
+        "y": 1075,
+        "w": 37,
+        "h": 45
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 12.58,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 12.47,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.55,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0088,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.47,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.47,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_054",
+      "source_label": "54",
+      "bbox": {
+        "x": 1061,
+        "y": 1082,
+        "w": 38,
+        "h": 51
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 14.89,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 14.6,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.93,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0194,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 5.05,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.6,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_055",
+      "source_label": "55",
+      "bbox": {
+        "x": 1372,
+        "y": 1078,
+        "w": 39,
+        "h": 44
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 12.1,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 11.98,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.41,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.01,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.61,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.19,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_056",
+      "source_label": "56",
+      "bbox": {
+        "x": 592,
+        "y": 1129,
+        "w": 33,
+        "h": 33
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 8.05,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 8.06,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 11.75,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9988,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 3.42,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 2.87,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_057",
+      "source_label": "57",
+      "bbox": {
+        "x": 696,
+        "y": 1137,
+        "w": 32,
+        "h": 33
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 8.21,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 8.11,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 11.67,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0123,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 3.28,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.02,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_058",
+      "source_label": "58",
+      "bbox": {
+        "x": 846,
+        "y": 1114,
+        "w": 38,
+        "h": 43
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 11.83,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 11.89,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.31,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.995,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.46,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.23,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_059",
+      "source_label": "59",
+      "bbox": {
+        "x": 1211,
+        "y": 1134,
+        "w": 41,
+        "h": 39
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 11.94,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 11.81,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 13.74,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0114,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.22,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.47,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_060",
+      "source_label": "60",
+      "bbox": {
+        "x": 1077,
+        "y": 1150,
+        "w": 40,
+        "h": 51
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 15.72,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 15.47,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.18,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0164,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 5.07,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.79,
+          "unit": "mm"
+        }
+      }
+    },
+    {
       "object_id": "obj_061",
       "source_label": "61",
       "bbox": {
-        "x": 1294,
-        "y": 1156,
+        "x": 1295,
+        "y": 1157,
+        "w": 40,
+        "h": 43
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 12.62,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 12.43,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 14.04,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0152,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.37,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.55,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_062",
+      "source_label": "62",
+      "bbox": {
+        "x": 1354,
+        "y": 1151,
+        "w": 42,
+        "h": 41
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.41,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.26,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 15.04,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0113,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.22,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.88,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_063",
+      "source_label": "63",
+      "bbox": {
+        "x": 792,
+        "y": 1192,
+        "w": 37,
+        "h": 49
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 13.28,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 13.33,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 16.33,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9959,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.82,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.36,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_064",
+      "source_label": "64",
+      "bbox": {
+        "x": 959,
+        "y": 1196,
+        "w": 49,
+        "h": 41
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
+          "value": 14.1,
+          "unit": "mm^2"
+        },
+        "Object Convex Hull Area|IMGSTAT:0000007": {
+          "value": 14.3,
+          "unit": "mm^2"
+        },
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 16.05,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 0.9861,
+          "unit": null
+        },
+        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
+          "value": 4.55,
+          "unit": "mm"
+        },
+        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
+          "value": 3.85,
+          "unit": "mm"
+        }
+      }
+    },
+    {
+      "object_id": "obj_065",
+      "source_label": "65",
+      "bbox": {
+        "x": 1167,
+        "y": 1214,
         "w": 43,
         "h": 45
       },
@@ -2434,187 +2594,27 @@
       },
       "traits": {
         "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.27,
+          "value": 13.93,
           "unit": "mm^2"
         },
         "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 15.26,
+          "value": 13.88,
           "unit": "mm^2"
         },
         "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 15.75,
+          "value": 14.82,
           "unit": "mm"
         },
         "Object Solidity|IMGSTAT:0000011": {
-          "value": 1.0003,
+          "value": 1.0039,
           "unit": null
         },
         "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.77,
+          "value": 4.23,
           "unit": "mm"
         },
         "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 3.94,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_062",
-      "source_label": "62",
-      "bbox": {
-        "x": 1352,
-        "y": 1150,
-        "w": 48,
-        "h": 45
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 15.9,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 16.26,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.11,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9783,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.6,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.27,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_063",
-      "source_label": "63",
-      "bbox": {
-        "x": 789,
-        "y": 1192,
-        "w": 44,
-        "h": 50
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 16.38,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 16.84,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 17.79,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9725,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 5.02,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.05,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_064",
-      "source_label": "64",
-      "bbox": {
-        "x": 954,
-        "y": 1195,
-        "w": 54,
-        "h": 45
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 17.07,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 18.04,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 18.08,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9462,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.95,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.31,
-          "unit": "mm"
-        }
-      }
-    },
-    {
-      "object_id": "obj_065",
-      "source_label": "65",
-      "bbox": {
-        "x": 1166,
-        "y": 1214,
-        "w": 45,
-        "h": 49
-      },
-      "qc": {
-        "contour_found": true,
-        "ellipse_fit_ok": true
-      },
-      "traits": {
-        "Object Area From Segmentation Mask|IMGSTAT:0000006": {
-          "value": 16.53,
-          "unit": "mm^2"
-        },
-        "Object Convex Hull Area|IMGSTAT:0000007": {
-          "value": 16.61,
-          "unit": "mm^2"
-        },
-        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
-          "value": 16.5,
-          "unit": "mm"
-        },
-        "Object Solidity|IMGSTAT:0000011": {
-          "value": 0.9952,
-          "unit": null
-        },
-        "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008": {
-          "value": 4.62,
-          "unit": "mm"
-        },
-        "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009": {
-          "value": 4.39,
+          "value": 4.04,
           "unit": "mm"
         }
       }

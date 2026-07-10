@@ -31,9 +31,9 @@ EXPECTED_TRAITS_ALL = [
 # Helpers
 # ---------------------------------------------------------------------------
 
-def run_pipeline(fixture_image, tmp_path, output_mode="all"):
+def run_pipeline(fixture_image, tmp_path):
     from process_image import process_image
-    return process_image(fixture_image, str(tmp_path), output_mode=output_mode)
+    return process_image(fixture_image, str(tmp_path))
 
 
 # ---------------------------------------------------------------------------
@@ -44,10 +44,14 @@ class TestEnvelopeStructure:
     def test_required_top_level_keys(self, fixture_image, tmp_path):
         result = run_pipeline(fixture_image, tmp_path)
         required = {
-            "job_id", "timestamp", "pipeline", "input",
-            "qc", "output_mode", "traits_emitted", "derived_images", "objects",
+            "schema_version", "job_id", "timestamp", "pipeline", "input",
+            "qc", "traits_emitted", "derived_images", "objects",
         }
         assert required <= result.keys()
+
+    def test_schema_version(self, fixture_image, tmp_path):
+        result = run_pipeline(fixture_image, tmp_path)
+        assert result["schema_version"] == "1.0"
 
     def test_pipeline_metadata(self, fixture_image, tmp_path):
         result = run_pipeline(fixture_image, tmp_path)
@@ -84,30 +88,26 @@ class TestQCFlags:
 
 
 # ---------------------------------------------------------------------------
-# Output modes
+# Canonical-only trait emission (always all traits — no output_mode)
 # ---------------------------------------------------------------------------
 
-class TestOutputModes:
-    def test_all_mode_emits_six_traits(self, fixture_image, golden_output, tmp_path):
-        result = run_pipeline(fixture_image, tmp_path, output_mode="all")
-        assert result["output_mode"] == "all"
+class TestTraitEmission:
+    def test_emits_six_traits(self, fixture_image, golden_output, tmp_path):
+        result = run_pipeline(fixture_image, tmp_path)
         assert result["traits_emitted"] == golden_output["traits_emitted"]
         assert len(result["traits_emitted"]) == 6
 
-    def test_all_mode_trait_keys_match(self, fixture_image, tmp_path):
-        result = run_pipeline(fixture_image, tmp_path, output_mode="all")
+    def test_trait_keys_match(self, fixture_image, tmp_path):
+        result = run_pipeline(fixture_image, tmp_path)
         assert result["traits_emitted"] == EXPECTED_TRAITS_ALL
 
-    def test_single_mode_emits_one_trait(self, fixture_image, tmp_path):
-        result = run_pipeline(fixture_image, tmp_path, output_mode="single")
-        assert result["output_mode"] == "single"
-        assert len(result["traits_emitted"]) == 1
-        assert result["traits_emitted"][0] == "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008"
-
-    def test_single_mode_objects_have_one_trait(self, fixture_image, tmp_path):
-        result = run_pipeline(fixture_image, tmp_path, output_mode="single")
+    def test_all_objects_have_expected_trait_keys(self, fixture_image, tmp_path):
+        result = run_pipeline(fixture_image, tmp_path)
         for obj in result["objects"]:
-            assert len(obj["traits"]) == 1
+            for trait_key in EXPECTED_TRAITS_ALL:
+                assert trait_key in obj["traits"], (
+                    f"Missing trait '{trait_key}' on {obj['object_id']}"
+                )
 
 
 # ---------------------------------------------------------------------------
@@ -131,14 +131,6 @@ class TestObjectResults:
             assert actual_obj["qc"] == expected_obj["qc"], (
                 f"QC mismatch for {actual_obj['object_id']}"
             )
-
-    def test_all_objects_have_expected_trait_keys(self, fixture_image, tmp_path):
-        result = run_pipeline(fixture_image, tmp_path, output_mode="all")
-        for obj in result["objects"]:
-            for trait_key in EXPECTED_TRAITS_ALL:
-                assert trait_key in obj["traits"], (
-                    f"Missing trait '{trait_key}' on {obj['object_id']}"
-                )
 
     def test_trait_values_within_tolerance_of_golden(self, fixture_image, golden_output, tmp_path):
         result = run_pipeline(fixture_image, tmp_path)
