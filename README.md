@@ -556,7 +556,7 @@ This is an open standard — new pipelines and improvements are welcome. See `CO
 
 ## License
 
-*(To be added — e.g., MIT / BSD-3-Clause / Apache-2.0. A license is required before others can reuse or extend this work.)*
+*(To be added)*
 
 ---
 
