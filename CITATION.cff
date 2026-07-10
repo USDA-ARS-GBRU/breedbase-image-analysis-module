@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+title: "BreedBase Image Analysis Module"
+abstract: "A standardized, API-driven framework for integrating automated image analysis pipelines into BreedBase, returning structured, ontology-keyed trait measurements with QC flags and provenance. Includes a reference seed morphometry pipeline."
+type: software
+version: 0.1.0
+date-released: 2026-07-10
+license:
+  - Apache-2.0
+  - CC-BY-4.0
+repository-code: "https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/tree/main"
+url: "https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/tree/main"
+# TODO: add the Zenodo DOI (doi:) once a release is archived.
+authors:
+  - family-names: Manching
+    given-names: Heather
+    orcid: "https://orcid.org/0000-0002-6348-6808"
+    affiliation: "North Carolina State University"   # TODO: confirm affiliation
+  - family-names: Mueller
+    given-names: Lukas
+    orcid: "https://orcid.org/0000-0001-8640-1750"
+    affiliation: "Boyce Thompson Institute (BTI)"
+  - family-names: Maza
+    given-names: Ben
+    affiliation: "Boyce Thompson Institute (BTI)"
+  - family-names: Hulse-Kemp
+    given-names: Amanda
+    orcid: "https://orcid.org/0000-0001-9670-9433"
+    affiliation: "USDA-ARS-GBRU"
+keywords:
+  - plant phenotyping
+  - plant breeding
+  - image analysis
+  - morphometry
+  - BreedBase
+  - BrAPI
+  - ontology
+  - FAIR data
+  - OpenAPI
