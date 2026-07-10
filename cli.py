@@ -3,7 +3,6 @@ cli.py — standalone entry point for the BreedBase image analysis pipeline.
 
 Usage:
     bb-analyze image.jpg --output-dir ./results
-    bb-analyze image.jpg --output-dir ./results --output-mode all
     bb-analyze image.jpg --output-dir ./results --format csv
 """
 
@@ -17,7 +16,13 @@ import argparse
 import uuid
 from datetime import datetime, timezone
 
-from process_image import analyze_image, PIPELINE_NAME, PIPELINE_VERSION
+from process_image import (
+    analyze_image,
+    PIPELINE_NAME,
+    PIPELINE_VERSION,
+    SCHEMA_VERSION,
+    DEFAULT_MARKER_DIAMETER_IN,
+)
 
 
 def _to_csv(envelope):
@@ -31,7 +36,6 @@ def _to_csv(envelope):
             "pipeline_name": pipeline["name"],
             "pipeline_version": pipeline["version"],
             "image_filename": envelope["input"]["image_filename"],
-            "output_mode": envelope["output_mode"],
             "qc_analysis_pass": qc.get("analysis_pass"),
             "qc_color_card_present": qc.get("color_card_present"),
             "qc_size_marker_detected": qc.get("size_marker_detected"),
@@ -76,16 +80,10 @@ def main():
         help="Output format for the results sidecar (default: json)",
     )
     parser.add_argument(
-        "--output-mode",
-        choices=["single", "all"],
-        default=None,
-        help="Emit one trait (single) or all traits (all). Defaults to OUTPUT_MODE env var or 'single'.",
-    )
-    parser.add_argument(
         "--marker-diameter",
         type=float,
-        default=0.75,
-        help="Physical diameter of the size marker in inches (default: 0.75)",
+        default=DEFAULT_MARKER_DIAMETER_IN,
+        help=f"Physical diameter of the size marker in inches (default: {DEFAULT_MARKER_DIAMETER_IN})",
     )
     parser.add_argument(
         "--host-url",
@@ -104,7 +102,6 @@ def main():
         result = analyze_image(
             args.image_path,
             marker_diameter_in=args.marker_diameter,
-            output_mode=args.output_mode,
         )
     except Exception as e:
         logging.error("Pipeline failed: %s", e)
@@ -127,12 +124,12 @@ def main():
     derived_images = [{"role": "overlay", "filename": overlay_name, "url": overlay_url}]
 
     envelope = {
+        "schema_version": SCHEMA_VERSION,
         "job_id": job_id,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "pipeline": {"name": PIPELINE_NAME, "version": PIPELINE_VERSION},
         "input": {"image_filename": filename},
         "qc": result["qc"],
-        "output_mode": result["output_mode"],
         "traits_emitted": result["traits_emitted"],
         "derived_images": derived_images,
         "objects": result["objects"],
