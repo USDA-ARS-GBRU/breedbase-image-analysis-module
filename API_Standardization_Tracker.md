@@ -89,7 +89,7 @@ Sequencing: **1 → 2** first (baseline + versioning), then **3–5** (framework
 
 ### Subtask 3 — Remove `output_mode` from framework + reference pipeline
 
-- [ ] Status: Not started
+- [x] Status: Done — `output_mode` removed from `process_image.py`, `api/app.py`, `cli.py`, and `api/config/openapi.yml` on branch `feat/canonical-only-v2` (2026-07-10). Pipeline now always emits all six `TRAITS_MAP` traits. Tests/fixtures updated to match. Details: `docs/Subtask_3-5_Change_Log.md`.
 
 **Purpose:** Collapse to one canonical output. A pipeline emits every trait it computes; "single vs all" is not a framework concern.
 
@@ -106,7 +106,7 @@ Sequencing: **1 → 2** first (baseline + versioning), then **3–5** (framework
 
 ### Subtask 4 — Remove the legacy response path + move pipeline params out of the contract
 
-- [ ] Status: Not started
+- [x] Status: Done — `_to_breedbase_legacy()` and the `format`/`resp_format` branch deleted from `api/app.py`; `marker_diameter_in` no longer read from the HTTP request, now defaults from `MARKER_DIAMETER_IN` env var via `process_image.py`'s `DEFAULT_MARKER_DIAMETER_IN` (2026-07-10, branch `feat/canonical-only-v2`). CLI options for standalone pipeline use retained in `cli.py`/`process_image.py`. `openapi.yml` requestBody was already image-only; no `format`/`marker_diameter_in` parameters existed to remove. README update deferred to Subtask 8 (flagged). Details: `docs/Subtask_3-5_Change_Log.md`.
 
 **Purpose:** The framework contract is "submit an image → receive the canonical envelope." Legacy shaping and pipeline tuning do not belong on the HTTP surface.
 
@@ -123,7 +123,7 @@ Sequencing: **1 → 2** first (baseline + versioning), then **3–5** (framework
 
 ### Subtask 5 — Formalize canonical envelope: `schema_version`, JSON Schema, path reconciliation
 
-- [ ] Status: Not started
+- [x] Status: Done — `SCHEMA_VERSION = "1.0"` added in `process_image.py` and threaded through every envelope builder (`process_image.py`, `api/app.py`, `cli.py`); `conformance/envelope.schema.json` (JSON Schema draft 2020-12) added per `Conformance_Test_Kit_Plan.md`'s location convention; `openapi.yml` path renamed `/upload` → `/analyze` (operationId/handler binding unchanged, verified live) and `info.version` bumped to `2.0.0` (2026-07-10, branch `feat/canonical-only-v2`). One deliberate deviation from `Conformance_Test_Kit_Plan.md`'s stricter draft (nullable `value`/`unit` to match real pipeline output) — flagged for review. Details: `docs/Subtask_3-5_Change_Log.md`.
 
 **Purpose:** Make the one standard explicit, runtime-assertable, and self-consistent across spec/handler/README.
 
