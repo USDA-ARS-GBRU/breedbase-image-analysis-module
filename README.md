@@ -558,7 +558,7 @@ This is an open standard — new pipelines and improvements are welcome. See [`C
 This repository is dual-licensed. The software and source code are licensed under the
 **Apache License 2.0** (see [`LICENSE`](https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/LICENSE)), which permits reuse, modification, and redistribution — including commercially — with attribution and an explicit patent grant.
 The documentation, data, figures, and vocabulary/ontology content are licensed under
-**Creative Commons Attribution 4.0 International (CC BY 4.0)** (see [LICENSE.md](https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/LICENSE.md)).
+**Creative Commons Attribution 4.0 International (CC BY 4.0)** (see [`LICENSE.md`](https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/LICENSE.md)).
 Where a file could fall under either, the code license governs source code and the content
 license governs prose, data, and media. Both licenses require attribution when reusing this work.
 
