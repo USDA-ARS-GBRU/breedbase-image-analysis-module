@@ -168,7 +168,9 @@ result = response.json()
 
 ### BrAPI compatibility
 
-Trait keys follow the IMGSTAT ontology format (`Human-readable name|ONTOLOGY:ID`) and are structured for direct ingestion into BreedBase as BrAPI-compatible observations. Units are always explicit.
+Trait keys use the format `Human-readable name|IMGSTAT:ID` (e.g., `Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008`) and are structured for direct ingestion into BreedBase as BrAPI-compatible observations, with an explicit unit on every value.
+
+**The IMGSTAT ID is authoritative.** The ID (e.g., `IMGSTAT:0000008`) is the canonical identifier for a trait; the human-readable label is *not* free text and must exactly match the official IMGSTAT label registered for that ID. Pipelines must emit valid IMGSTAT IDs and validate their output against a **pinned IMGSTAT release version**, so that any result keyed to a given ID means the same thing across pipelines, programs, and time. For the authoritative term list and release versions, see the [IMGSTAT ontology repository](https://github.com/USDA-ARS-GBRU/imgstat-ontology).
 
 ---
 
