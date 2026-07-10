@@ -574,10 +574,11 @@ If you use this framework or the reference pipeline, please cite it. A manuscrip
 
 ```bibtex
 @software{breedbase_image_analysis_module,
-  title  = {BreedBase Image Analysis Module},
-  author = {Manching, Heather and USDA-ARS-GBRU},
-  year   = {2026},
-  url    = {https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module}
+  title     = {BreedBase Image Analysis Module},
+  author    = {Manching, Heather and Maza, Ben and Hulse-Kemp, Amanda and Mueller, Lukas },
+  year      = {2026},
+  version   = {0.1.0},
+  url       = {https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/tree/main}
 }
 ```
 
