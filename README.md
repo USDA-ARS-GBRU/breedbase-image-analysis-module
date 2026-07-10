@@ -98,19 +98,19 @@ To go further, see [Running the reference pipeline](#running-the-reference-pipel
 
 **Not included:** BreedBase UI code (lives in the BreedBase repository), species-specific trait ontologies, and production infrastructure such as job queues or cloud storage.
 
-**Building your own pipeline?** Implement the interface in [Building a compatible pipeline](#building-a-compatible-pipeline) and expose a `POST /analyze` endpoint conforming to [The API contract](#the-api-contract). The seed morphometry pipeline here is the model to copy.
+**Building your own pipeline?** Implement the interface in [Building a compatible pipeline](#building-a-compatible-pipeline) and expose a `POST /upload` endpoint conforming to [The API contract](#the-api-contract). The seed morphometry pipeline here is the model to copy.
 
 ---
 
 ## How the integration works
 
-BreedBase does not call pipelines directly. It submits images and metadata to this module's `POST /analyze` endpoint; the module routes the request to the right pipeline, validates the output against the contract, and returns a standardized JSON result that BreedBase stores as trait observations.
+BreedBase does not call pipelines directly. It submits images and metadata to this module's `POST /upload` endpoint; the module routes the request to the right pipeline, validates the output against the contract, and returns a standardized JSON result that BreedBase stores as trait observations.
 
 Step-by-step:
 
 1. An image is captured in the field and stored in BreedBase (via Field Book or direct upload)
 2. A user or automated process triggers analysis from the BreedBase UI
-3. BreedBase submits the image to this module via `POST /analyze`, including optional pipeline parameters and metadata
+3. BreedBase submits the image to this module via `POST /upload`, including optional pipeline parameters and metadata
 4. The module routes the request to the registered pipeline
 5. The pipeline processes the image and returns a standardized JSON result to the module
 6. The module validates the result and returns it to BreedBase
@@ -127,7 +127,7 @@ The full contract is in `config/openapi.yml`; a rendered, browsable version is p
 ### Endpoint
 
 ```
-POST /analyze
+POST /upload
 ```
 
 ### Request (multipart form upload)
@@ -148,7 +148,7 @@ Returns the standard JSON envelope described in [The output envelope](#the-outpu
 ### Example - curl
 
 ```bash
-curl -X POST http://localhost:8000/analyze \
+curl -X POST http://localhost:8000/upload \
   -F "image=@path/to/image.jpg" \
   -F "output_mode=all"
 ```
@@ -160,7 +160,7 @@ import requests
 
 with open("path/to/image.jpg", "rb") as f:
     response = requests.post(
-        "http://localhost:8000/analyze",
+        "http://localhost:8000/upload",
         files={"image": f},
         data={"output_mode": "all"}
     )
