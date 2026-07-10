@@ -58,6 +58,8 @@ This project fixes that. It defines a **standard connector** between [BreedBase]
 
 Run the reference pipeline on the sample image bundled with this repository — no local Python setup required.
 
+> **Heads-up — Docker Image Name** The reference pipeline `hkmanchi/sorghum-breedbase-image-pipeline:latest` is specific to sorghum, however the framework is crop-agnostic.
+
 ```bash
 docker pull hkmanchi/sorghum-breedbase-image-pipeline:latest
 
