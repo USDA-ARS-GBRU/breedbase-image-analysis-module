@@ -20,35 +20,6 @@ This project fixes that. It defines a **standard connector** between [BreedBase]
 
 ---
 
-## Quick start (about 2 minutes)
-
-Run the reference pipeline on the sample image bundled with this repository — no local Python setup required.
-
-```bash
-docker pull hkmanchi/sorghum-breedbase-image-pipeline:latest
-
-docker run --rm \
-  -v "$(pwd)/results:/results" \
-  hkmanchi/sorghum-breedbase-image-pipeline:latest \
-  bb-analyze /app/tests/fixtures/sample_seeds.jpg --output-dir /results --output-mode all
-```
-
-You will get two files in `./results/`:
-
-- an **annotated overlay image** — your photo with each seed outlined and numbered
-- a **results file** — every trait, for every seed, with units
-
-Example output:
-
-| Object | Max diameter | Min diameter | Area |
-|--------|-------------|-------------|------|
-| obj_001 | 4.3 mm | 3.1 mm | 14.2 mm² |
-| obj_002 | 4.1 mm | 3.0 mm | 13.6 mm² |
-
-<img src="https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/docs/img/example_overlay.tiff" alt="Example: an image of seeds on the left; the same image with each seed outlined and labeled on the right." width="600" height="400">
-
-To go further, see [Running the reference pipeline](#running-the-reference-pipeline).
-
 ---
 
 ## Who should read this
@@ -84,6 +55,36 @@ To go further, see [Running the reference pipeline](#running-the-reference-pipel
 </details>
 
 ---
+
+## Quick start (about 2 minutes)
+
+Run the reference pipeline on the sample image bundled with this repository — no local Python setup required.
+
+```bash
+docker pull hkmanchi/sorghum-breedbase-image-pipeline:latest
+
+docker run --rm \
+  -v "$(pwd)/results:/results" \
+  hkmanchi/sorghum-breedbase-image-pipeline:latest \
+  bb-analyze /app/tests/fixtures/sample_seeds.jpg --output-dir /results --output-mode all
+```
+
+You will get two files in `./results/`:
+
+- an **annotated overlay image** — your photo with each seed outlined and numbered
+- a **results file** — every trait, for every seed, with units
+
+Example output:
+
+| Object | Max diameter | Min diameter | Area |
+|--------|-------------|-------------|------|
+| obj_001 | 4.3 mm | 3.1 mm | 14.2 mm² |
+| obj_002 | 4.1 mm | 3.0 mm | 13.6 mm² |
+
+<img src="https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/docs/img/example_overlay.tiff" alt="Example: an image of seeds on the left; the same image with each seed outlined and labeled on the right." width="600" height="400">
+
+To go further, see [Running the reference pipeline](#running-the-reference-pipeline).
+
 
 ## What this repository includes
 
