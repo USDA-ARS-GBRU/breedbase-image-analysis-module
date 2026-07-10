@@ -15,11 +15,7 @@ authors:
   - family-names: Manching
     given-names: Heather
     orcid: "https://orcid.org/0000-0002-6348-6808"
-    affiliation: "North Carolina State University"   # TODO: confirm affiliation
-  - family-names: Mueller
-    given-names: Lukas
-    orcid: "https://orcid.org/0000-0001-8640-1750"
-    affiliation: "Boyce Thompson Institute (BTI)"
+    affiliation: "North Carolina State University"
   - family-names: Maza
     given-names: Ben
     affiliation: "Boyce Thompson Institute (BTI)"
@@ -27,6 +23,10 @@ authors:
     given-names: Amanda
     orcid: "https://orcid.org/0000-0001-9670-9433"
     affiliation: "USDA-ARS-GBRU"
+  - family-names: Mueller
+    given-names: Lukas
+    orcid: "https://orcid.org/0000-0001-8640-1750"
+    affiliation: "Boyce Thompson Institute (BTI)"
 keywords:
   - plant phenotyping
   - plant breeding
