@@ -24,10 +24,12 @@ logger = logging.getLogger(__name__)
 PIPELINE_NAME = os.getenv("PIPELINE_NAME", "seed_size_shape")
 PIPELINE_VERSION = os.getenv("PIPELINE_VERSION", "0.1.0")
 
-# --------------------------------------------------------------------
-# Working on multi-trait schema, but adding switch for POC
-# --------------------------------------------------------------------
-DEFAULT_OUTPUT_MODE = os.getenv("OUTPUT_MODE", "single").lower()  # "single" or "all"
+# Envelope schema version — bump when the canonical envelope shape changes.
+SCHEMA_VERSION = "1.0"
+
+# Physical diameter of the size marker, in inches. Pipeline-internal default;
+# not part of the framework HTTP contract (see API_Standardization_Tracker.md Subtask 4).
+DEFAULT_MARKER_DIAMETER_IN = float(os.getenv("MARKER_DIAMETER_IN", "0.75"))
 
 # --------------------------------------------------------------------
 # Internal metric keys from analysis/shape_analysis.py 
@@ -43,16 +45,6 @@ TRAITS_MAP = {
         "obj_diam_max_ellipse": ("Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008", "mm", 2),
         "obj_diam_min_ellipse": ("Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009", "mm", 2),
     }
-
-def select_internal_trait_keys(output_mode: str):
-    """
-    POC mode emits a single trait but keeps the same output schema.
-    """
-    output_mode = (output_mode or "single").lower()
-    if output_mode == "all":
-        return list(TRAITS_MAP.keys())
-    # POC default: only one trait
-    return ["obj_diam_max_ellipse"]
 
 def _to_float(x):
     """Best-effort conversion to float; returns None if not convertible."""
@@ -77,7 +69,7 @@ def safe_round(x, ndigits=2):
 def _meta_value(sm_metadata, trait, default=None):
     return next((item["value"] for item in sm_metadata if item.get("trait") == trait), default)
 
-def analyze_image(image_path, marker_diameter_in=0.75, output_mode=None):
+def analyze_image(image_path, marker_diameter_in=DEFAULT_MARKER_DIAMETER_IN):
     """
     Run the image analysis pipeline on a single image.
 
@@ -85,13 +77,11 @@ def analyze_image(image_path, marker_diameter_in=0.75, output_mode=None):
     Returns a dict with keys:
       - qc:            image-level QC flags
       - objects:       list of per-object trait dicts
-      - output_mode:   str
-      - traits_emitted: list of public trait keys
+      - traits_emitted: list of public trait keys (always all of TRAITS_MAP)
       - overlay_img:   numpy array of the result overlay image
     Raises exceptions on failure.
     """
-    output_mode = (output_mode or DEFAULT_OUTPUT_MODE).lower()
-    selected_keys = select_internal_trait_keys(output_mode)
+    selected_keys = list(TRAITS_MAP.keys())
     traits_emitted = [TRAITS_MAP[k][0] for k in selected_keys]
 
     # --------------------------------------------------------------------
@@ -198,13 +188,12 @@ def analyze_image(image_path, marker_diameter_in=0.75, output_mode=None):
             "object_count": object_count,
         },
         "objects": objects,
-        "output_mode": output_mode,
         "traits_emitted": traits_emitted,
         "overlay_img": overlay_img,
     }
 
 
-def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.75, output_mode=None):
+def process_image(image_path, results_dir, host_url=None, marker_diameter_in=DEFAULT_MARKER_DIAMETER_IN):
     """
     Run the reference image analysis pipeline on a single image.
 
@@ -217,7 +206,7 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
     os.makedirs(results_dir, exist_ok=True)
     job_id = str(uuid.uuid4())
 
-    result = analyze_image(image_path, marker_diameter_in=marker_diameter_in, output_mode=output_mode)
+    result = analyze_image(image_path, marker_diameter_in=marker_diameter_in)
 
     # --------------------------------------------------------------------
     # Output filenames
@@ -235,15 +224,15 @@ def process_image(image_path, results_dir, host_url=None, marker_diameter_in=0.7
     composite_url = f"{host_url}download/{composite_image_name}" if host_url else composite_image_path
 
     # --------------------------------------------------------------------
-    # Canonical envelope v1
+    # Canonical envelope
     # --------------------------------------------------------------------
     envelope = {
+        "schema_version": SCHEMA_VERSION,
         "job_id": job_id,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "pipeline": {"name": PIPELINE_NAME, "version": PIPELINE_VERSION},
         "input": {"image_filename": filename},
         "qc": result["qc"],
-        "output_mode": result["output_mode"],
         "traits_emitted": result["traits_emitted"],
         "derived_images": [
             {"role": "overlay", "filename": composite_image_name, "url": composite_url}
@@ -276,10 +265,8 @@ def main():
     parser.add_argument("image_path", help="Path to the input image")
     parser.add_argument("results_dir", help="Directory to save outputs")
     parser.add_argument("--host_url", help="Base URL for download links")
-    parser.add_argument("--marker_diameter_in", type=float, default=0.75,
-                    help="Physical diameter of the size marker in inches (default: 0.75)")
-    parser.add_argument("--output_mode", choices=["single", "all"], default=DEFAULT_OUTPUT_MODE,
-                    help="Emit a single trait (POC) or all traits (default from OUTPUT_MODE env).")
+    parser.add_argument("--marker_diameter_in", type=float, default=DEFAULT_MARKER_DIAMETER_IN,
+                    help=f"Physical diameter of the size marker in inches (default: {DEFAULT_MARKER_DIAMETER_IN})")
     args = parser.parse_args()
 
     try:
@@ -288,7 +275,6 @@ def main():
             args.results_dir,
             host_url=args.host_url,
             marker_diameter_in=args.marker_diameter_in,
-            output_mode=args.output_mode
         )
         print(json.dumps(payload))
         sys.exit(0)

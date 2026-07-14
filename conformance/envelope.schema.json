@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/conformance/envelope.schema.json",
+  "title": "BreedBase Image Analysis canonical output envelope",
+  "description": "Conformance authority for the canonical output envelope (API_Standardization_Tracker.md Subtask 5). Strict on required structure, lenient on extras (additionalProperties: true) so pipelines can add their own fields. Does not encode pipeline-specific analysis_pass criteria.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "job_id",
+    "pipeline",
+    "qc",
+    "traits_emitted",
+    "objects",
+    "derived_images"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "job_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "pipeline": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "image_filename": { "type": "string" }
+      }
+    },
+    "qc": {
+      "type": "object",
+      "required": ["analysis_pass"],
+      "additionalProperties": true,
+      "properties": {
+        "analysis_pass": { "type": "boolean" }
+      }
+    },
+    "traits_emitted": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "derived_images": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "filename", "url"],
+        "additionalProperties": true,
+        "properties": {
+          "role": { "type": "string" },
+          "filename": { "type": "string" },
+          "url": { "type": "string" }
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["object_id", "traits"],
+        "additionalProperties": true,
+        "properties": {
+          "object_id": { "type": "string" },
+          "source_label": { "type": "string" },
+          "bbox": { "type": "object" },
+          "qc": { "type": "object", "additionalProperties": true },
+          "traits": {
+            "type": "object",
+            "propertyNames": {
+              "pattern": "^.+\\|IMGSTAT:\\d{7}$"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "required": ["value", "unit"],
+              "properties": {
+                "value": { "type": ["number", "null"] },
+                "unit": { "type": ["string", "null"] }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

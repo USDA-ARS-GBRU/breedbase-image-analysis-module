@@ -1,25 +1,13 @@
 openapi: 3.0.0
 info:
   title: Image Upload API
-  version: "1.0"
+  version: "2.0.0"
 
 paths:
-  /upload:
+  /analyze:
     post:
       summary: Upload an image and run analysis.
       operationId: api.app.upload_image_and_process
-
-      parameters:
-        - in: query
-          name: output_mode
-          required: false
-          schema:
-            type: string
-            enum: [single, all]
-            default: single
-          description: >
-            Controls which traits are included in the response while keeping the same response structure.
-            "single" returns only one trait per object (POC mode). "all" returns all supported traits.
 
       requestBody:
         required: true
@@ -43,8 +31,9 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [job_id, pipeline, qc, objects]
+                required: [schema_version, job_id, pipeline, qc, objects]
                 properties:
+                  schema_version: { type: string }
                   job_id: { type: string }
                   timestamp: { type: string }
                   pipeline:
@@ -53,9 +42,6 @@ paths:
                       name: { type: string }
                       version: { type: string }
                   qc: { type: object }
-                  output_mode:
-                    type: string
-                    enum: [single, all]
                   traits_emitted:
                     type: array
                     items: { type: string }

@@ -60,58 +60,6 @@ def _allowed_file(filename: str) -> bool:
     ext = filename.rsplit(".", 1)[1].lower()
     return ext in ALLOWED_EXTENSIONS
 
-def _to_breedbase_legacy(envelope: dict) -> dict:
-    """
-    Convert canonical envelope -> legacy BreedBase-compatible response.
-
-    Output keys:
-    - image_link (overlay image)
-    - results (subanalyses)
-    - info (optional qc metadata
-
-    NOTE:
-    - per-object image_link is null
-    """
-
-    # Overlay image URL (main analyzed image)
-    image_link = None
-    for di in envelope.get("derived_images", []) or []:
-        if di.get("role") == "overlay" and di.get("url"):
-            image_link = di["url"]
-            break
-    if not image_link and envelope.get("derived_images"):
-        image_link = envelope["derived_images"][0].get("url")
-
-    # Select emitted trait (POC = first trait)
-    traits_emitted = envelope.get("traits_emitted") or []
-    trait_key = traits_emitted[0] if traits_emitted else None
-
-    results = {}
-
-    objects = envelope.get("objects") or []
-    for i, obj in enumerate(objects, start=1):
-        sample_key = f"sample_{i:03d}"
-
-        value = None
-        if trait_key and isinstance(obj.get("traits"), dict):
-            trait_block = obj["traits"].get(trait_key)
-            if isinstance(trait_block, dict):
-                value = trait_block.get("value")
-
-        results[sample_key] = {
-            "trait_value": value,
-            "image_link": None
-        }
-
-    return {
-        "image_link": image_link,
-        "trait_name": trait_key,
-        "results": results,
-        "info": envelope.get("qc", {})
-    }
-    
-
-
 def upload_image_and_process():
     """
     Connexion/OpenAPI maps an endpoint in openapi.yml to this handler.
@@ -151,21 +99,13 @@ def upload_image_and_process():
     file.save(upload_path)
     logging.info("job_id=%s Saved upload to %s", job_id, upload_path)
 
-    output_mode = request.args.get("output_mode")
-    marker_diameter = request.args.get("marker_diameter_in", type=float)
-
     if str(REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(REPO_ROOT))
-    from process_image import analyze_image, PIPELINE_NAME, PIPELINE_VERSION
+    from process_image import analyze_image, PIPELINE_NAME, PIPELINE_VERSION, SCHEMA_VERSION
 
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-            future = executor.submit(
-                analyze_image,
-                str(upload_path),
-                marker_diameter_in=marker_diameter if marker_diameter is not None else 0.75,
-                output_mode=output_mode,
-            )
+            future = executor.submit(analyze_image, str(upload_path))
             result = future.result(timeout=PROCESS_TIMEOUT_S)
     except concurrent.futures.TimeoutError:
         logging.error("job_id=%s Pipeline timed out after %ss", job_id, PROCESS_TIMEOUT_S)
@@ -184,12 +124,12 @@ def upload_image_and_process():
 
     # Build canonical envelope
     payload = {
+        "schema_version": SCHEMA_VERSION,
         "job_id": job_id,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "pipeline": {"name": PIPELINE_NAME, "version": PIPELINE_VERSION},
         "input": {"image_filename": safe_name},
         "qc": result["qc"],
-        "output_mode": result["output_mode"],
         "traits_emitted": result["traits_emitted"],
         "derived_images": [
             {"role": "overlay", "filename": composite_image_name, "url": composite_url}
@@ -198,12 +138,6 @@ def upload_image_and_process():
     }
 
     logging.info("job_id=%s Analysis complete: %d objects", job_id, result["qc"]["object_count"])
-
-    # Optional compatibility mode for single trait BreedBase output
-    resp_format = (request.args.get("format") or "canonical").lower()
-
-    if resp_format in ("breedbase", "bb", "legacy"):
-        return jsonify(_to_breedbase_legacy(payload))
 
     return jsonify(payload)
 
