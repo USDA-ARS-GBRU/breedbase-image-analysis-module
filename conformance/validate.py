@@ -65,7 +65,18 @@ from dataclasses import dataclass
 from importlib.resources import files
 from pathlib import Path
 
-import jsonschema
+# jsonschema ships with the `conformance` (and `dev`) extras, not the base package.
+# Guard the import so `from conformance import validate` and `bb-conformance` give a
+# readable "install the extra" message instead of a raw traceback when it's missing.
+try:
+    import jsonschema
+except ModuleNotFoundError:  # pragma: no cover - exercised via the missing-dep path
+    jsonschema = None
+
+_MISSING_JSONSCHEMA = (
+    "the 'jsonschema' package is required to run conformance checks. "
+    'Install the conformance extra:  pip install -e ".[conformance]"'
+)
 
 # ---------------------------------------------------------------------------
 # Trait-key format. This is the SAME rule as the schema's
@@ -273,7 +284,11 @@ def validate(envelope: dict, *, strict: bool = False,
                       apply the success-implies-output conditional.
     pipeline_output : allow the module-injected fields (job_id, derived_images) to be
                       absent, for validating raw pipeline stdout pre-module.
+
+    Raises RuntimeError (with an install hint) if the jsonschema dependency is missing.
     """
+    if jsonschema is None:
+        raise RuntimeError(_MISSING_JSONSCHEMA)
     schema = _load_schema(strict)
     if pipeline_output:
         _relax_module_fields(schema)
@@ -323,8 +338,15 @@ def main(argv: list[str] | None = None) -> int:
             print(f"ERROR — {args.output!r} is not valid JSON: {exc}", file=sys.stderr)
         return 2
 
-    problems = validate(envelope, strict=args.strict,
-                        pipeline_output=args.pipeline_output)
+    # A missing jsonschema surfaces as a friendly message + exit 2 (environment error),
+    # not a traceback (Decision: friendly guard).
+    try:
+        problems = validate(envelope, strict=args.strict,
+                            pipeline_output=args.pipeline_output)
+    except RuntimeError as exc:
+        if not args.quiet:
+            print(f"ERROR — {exc}", file=sys.stderr)
+        return 2
 
     if not problems:
         if not args.quiet:
