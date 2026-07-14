@@ -58,14 +58,14 @@ This project fixes that. It defines a **standard connector** between [BreedBase]
 
 Run the reference pipeline on the sample image bundled with this repository — no local Python setup required.
 
-> **Heads-up — Docker Image Name** The reference pipeline `hkmanchi/sorghum-breedbase-image-pipeline:latest` is specific to sorghum, however the framework is crop-agnostic.
+> **Heads-up — Docker Image Name & Version** The reference pipeline `hkmanchi/sorghum-breedbase-image-pipeline` is specific to sorghum, but the framework is crop-agnostic. Always pin an explicit version tag (`:<version>`) rather than `:latest` — see [Versioning and image tags](#versioning-and-image-tags).
 
 ```bash
-docker pull hkmanchi/sorghum-breedbase-image-pipeline:latest
+docker pull hkmanchi/sorghum-breedbase-image-pipeline:<version>
 
 docker run --rm \
   -v "$(pwd)/results:/results" \
-  hkmanchi/sorghum-breedbase-image-pipeline:latest \
+  hkmanchi/sorghum-breedbase-image-pipeline:<version> \
   bb-analyze /app/tests/fixtures/sample_seeds.jpg --output-dir /results --output-mode all
 ```
 
@@ -91,26 +91,26 @@ To go further, see [Running the reference pipeline](#running-the-reference-pipel
 **Included:**
 
 - A reference Flask/Connexion backend implementing the BreedBase image analysis integration layer
-- A standardized API contract (OpenAPI 3.0) defining how BreedBase communicates with pipelines
+- A standardized API contract (OpenAPI 3.0, contract `info.version` 2.0.0) plus a standalone `envelope.schema.json` (JSON Schema 2020-12) defining how BreedBase communicates with pipelines
 - A pipeline interface specification describing what any compliant pipeline must accept and return
 - A complete reference pipeline (seed morphometry)
 - Documentation for reproducible deployment
 
 **Not included:** BreedBase UI code (lives in the BreedBase repository), species-specific trait ontologies, and production infrastructure such as job queues or cloud storage.
 
-**Building your own pipeline?** Implement the interface in [Building a compatible pipeline](#building-a-compatible-pipeline) and expose a `POST /upload` endpoint conforming to [The API contract](#the-api-contract). The seed morphometry pipeline here is the model to copy.
+**Building your own pipeline?** Implement the interface in [Building a compatible pipeline](#building-a-compatible-pipeline) and expose a `POST /analyze` endpoint conforming to [The API contract](#the-api-contract). The seed morphometry pipeline here is the model to copy.
 
 ---
 
 ## How the integration works
 
-BreedBase does not call pipelines directly. It submits images and metadata to this module's `POST /upload` endpoint; the module routes the request to the right pipeline, validates the output against the contract, and returns a standardized JSON result that BreedBase stores as trait observations.
+BreedBase does not call pipelines directly. It submits images and metadata to this module's `POST /analyze` endpoint; the module routes the request to the right pipeline, validates the output against the contract, and returns a standardized JSON result that BreedBase stores as trait observations.
 
 Step-by-step:
 
 1. An image is captured in the field and stored in BreedBase (via Field Book or direct upload)
 2. A user or automated process triggers analysis from the BreedBase UI
-3. BreedBase submits the image to this module via `POST /upload`, including optional pipeline parameters and metadata
+3. BreedBase submits the image to this module via `POST /analyze` (the request carries only the image; pipeline-specific tuning is internal to each pipeline)
 4. The module routes the request to the registered pipeline
 5. The pipeline processes the image and returns a standardized JSON result to the module
 6. The module validates the result and returns it to BreedBase
@@ -122,12 +122,12 @@ Step-by-step:
 
 ## The API Contract
 
-The full contract is in `config/openapi.yml`; a rendered, browsable version is published at [API docs](#) *(link once GitHub Pages / Redoc is set up)*. Summary below.
+The full contract is in `config/openapi.yml` (`openapi: 3.0.0`, `info.version: 2.0.0`); the canonical envelope also has a standalone, machine-checkable definition in `envelope.schema.json` (JSON Schema 2020-12). A rendered, browsable version is published at [API docs](#) *(link once GitHub Pages / Redoc is set up)*. Summary below.
 
 ### Endpoint
 
 ```
-POST /upload
+POST /analyze
 ```
 
 ### Request (multipart form upload)
@@ -135,22 +135,18 @@ POST /upload
 | Field | Required | Type | Description |
 |-------|----------|------|-------------|
 | `image` | Yes | File (JPEG or PNG) | The image to analyze |
-| `output_mode` | No | string | `single` (default) or `all` — how many traits are emitted |
-| `format` | No | string | `canonical` (default) or `breedbase` — response **shape** variant |
-| `marker_diameter_in` | No | float | Physical diameter of the size marker, in inches (default: `0.75`) |
 
-> **Heads-up — two different `format` switches.** The API `format` parameter (`canonical`/`breedbase`) selects the JSON *shape*. The CLI `--format` flag (`json`/`csv`) selects the *file type* written to disk. They are unrelated.
+The request carries **only the image** — one canonical response shape, no output-shape or trait-count switches. Pipeline-specific tuning (e.g. the size-marker diameter) is configured inside the pipeline, not sent over HTTP; see [Running the reference pipeline](#running-the-reference-pipeline) for the standalone `--marker-diameter` option.
 
 ### Response
 
-Returns the standard JSON envelope described in [The output envelope](#the-output-envelope).
+Returns the standard JSON envelope described in [The output envelope](#the-output-envelope). There is exactly one response shape.
 
 ### Example - curl
 
 ```bash
-curl -X POST http://localhost:8000/upload \
-  -F "image=@path/to/image.jpg" \
-  -F "output_mode=all"
+curl -X POST http://localhost:8000/analyze \
+  -F "image=@path/to/image.jpg"
 ```
 
 ### Example - Python
@@ -160,9 +156,8 @@ import requests
 
 with open("path/to/image.jpg", "rb") as f:
     response = requests.post(
-        "http://localhost:8000/upload",
+        "http://localhost:8000/analyze",
         files={"image": f},
-        data={"output_mode": "all"}
     )
 
 result = response.json()
@@ -199,7 +194,7 @@ Minimum QC block:
 "qc": { "analysis_pass": true, "object_count": 65 }
 ```
 
-`analysis_pass` must be `true` only when the result is reliable enough to store. Additional QC fields (e.g., `size_marker_detected`, `color_card_present`) are encouraged and passed through to BreedBase.
+`analysis_pass` must be `true` only when the result is reliable enough to store (specific to the pipeline analyzing the image). Additional QC fields (e.g., `size_marker_detected`, `color_card_present`) are encouraged and passed through to BreedBase.
 
 ### Pipeline requirements checklist
 
@@ -210,7 +205,7 @@ Minimum QC block:
 - [ ] No hard-coded file paths
 - [ ] Output written only to the designated output directory
 - [ ] Runnable as a Docker container
-*- [ ] Installable as a Python package or runnable as a Docker container*
+*- [ ] Runnable as a Docker container*
 
 ### Recommended repository structure
 
@@ -239,6 +234,7 @@ Every compliant pipeline returns the same JSON structure — that uniformity is 
 
 ```json
 {
+  "schema_version": "1.0",
   "job_id": "3f2a1b4c-...",
   "timestamp": "2024-06-15T14:32:00Z",
   "pipeline": { "name": "seed_size_shape", "version": "0.1.0" },
@@ -249,7 +245,6 @@ Every compliant pipeline returns the same JSON structure — that uniformity is 
     "size_marker_detected": true,
     "object_count": 65
   },
-  "output_mode": "all",
   "traits_emitted": [
     "Object Maximum Diameter From Fitted Ellipse|IMGSTAT:0000008",
     "Object Minimum Diameter From Fitted Ellipse|IMGSTAT:0000009"
@@ -277,6 +272,7 @@ Every compliant pipeline returns the same JSON structure — that uniformity is 
 
 | Field | Description |
 |-------|-------------|
+| `schema_version` | Version of the output-envelope contract this payload conforms to (currently `"1.0"`). Lets a consumer assert the shape at runtime instead of inferring it. Independent of `pipeline.version` and the release/Docker version |
 | `job_id` | UUID assigned by the module at request time |
 | `timestamp` | ISO 8601 timestamp of the analysis |
 | `pipeline.name` / `pipeline.version`| Which pipeline that produced the result, and its version |
@@ -302,7 +298,7 @@ Every compliant pipeline returns the same JSON structure — that uniformity is 
 
 The reference pipeline's accuracy depends on how the photo is taken. Every image must include:
 
-- **A neutral, uncluttered background** (a plain matte sheet works well) so objects segment cleanly.
+- **A neutral, uncluttered background that contrasts with target object** (a plain matte sheet works well) so objects segment cleanly.
 - **One color calibration card**, fully visible and unobstructed, for lighting/color correction.
 - **One circular size marker of known diameter** (default assumed `0.75"`) for the pixel-to-millimeter conversion. If yours differs, pass the correct value (`--marker-diameter` / `marker_diameter_in`).
 - **Even, diffuse lighting** with minimal shadows and no glare on the seeds, card, or marker.
@@ -385,12 +381,7 @@ bb-analyze path/to/image.jpg --output-dir ./results --format csv    # one row pe
 
 CSV flattens the `objects` array into one row per object, repeating envelope-level metadata alongside each object's fields — convenient for spreadsheets. Use JSON for programmatic or BreedBase use.
 
-**How many traits:**
-
-```bash
-# Default emits a single trait; use --output-mode all for all six morphometric traits.
-bb-analyze path/to/image.jpg --output-dir ./results --output-mode all
-```
+> **Note — traits emitted.** The pipeline always emits every trait it computes (all six morphometric traits). There is one canonical output. Which traits a pipeline computes is a property of the pipeline, not a request option.
 
 **Size marker diameter** (must match your physical marker, in inches; drives pixel→mm):
 
@@ -404,7 +395,6 @@ bb-analyze path/to/image.jpg --output-dir ./results --marker-diameter 1.0
 bb-analyze path/to/image.jpg \
   --output-dir ./results \
   --format csv \
-  --output-mode all \
   --marker-diameter 0.75
 ```
 
@@ -417,7 +407,7 @@ Exits `0` on success (prints file paths); exits `1` on failure (prints a JSON er
 ```python
 from process_image import analyze_image
 
-result = analyze_image("path/to/image.jpg", output_mode="all")
+result = analyze_image("path/to/image.jpg")
 ```
 Check image-level QC:
 
@@ -437,7 +427,7 @@ for obj in result["objects"]:
     print(f"{obj['object_id']}: {d['value']} {d['unit']}")
 ```
 
-**Return value:** `qc` (dict), `objects` (list), `output_mode` (str), `traits_emitted` (list), `overlay_img` (NumPy array of the annotated image).
+**Return value:** `qc` (dict), `objects` (list), `traits_emitted` (list), `overlay_img` (NumPy array of the annotated image).
 
 Batch example:
 
@@ -447,7 +437,7 @@ from process_image import analyze_image
 
 results = []
 for img_path in sorted(Path("./session_images").glob("*.jpg")):
-    result = analyze_image(str(img_path), output_mode="all")
+    result = analyze_image(str(img_path))
     if result["qc"]["analysis_pass"]:
         for obj in result["objects"]:
             row = {"image": img_path.name, "object_id": obj["object_id"]}
@@ -462,6 +452,8 @@ for img_path in sorted(Path("./session_images").glob("*.jpg")):
 
 Recommended for BreedBase integration and for anyone who prefers not to manage a Python environment.
 
+Pin an explicit version tag (`:<version>`), not `:latest` — see [Versioning and image tags](#versioning-and-image-tags).
+
 ```bash
 docker pull hkmanchi/sorghum-breedbase-image-pipeline:latest   # linux/amd64
 ```
@@ -469,7 +461,7 @@ docker pull hkmanchi/sorghum-breedbase-image-pipeline:latest   # linux/amd64
 Run the REST API server:
 
 ```bash
-docker run -p 8000:8000 hkmanchi/sorghum-breedbase-image-pipeline:latest
+docker run -p 8000:8000 hkmanchi/sorghum-breedbase-image-pipeline:<version>
 ```
 
 Serves at `http://localhost:8000` (see [The API contract](#the-api-contract)).
@@ -480,12 +472,30 @@ Analyze a local image:
 docker run --rm \
   -v "$(pwd)/images:/images" \
   -v "$(pwd)/results:/results" \
-  hkmanchi/sorghum-breedbase-image-pipeline:latest \
-  bb-analyze /images/tray_001.jpg --output-dir /results --output-mode all
+  hkmanchi/sorghum-breedbase-image-pipeline:<version> \
+  bb-analyze /images/tray_001.jpg --output-dir /results
 ```
 
 Or `docker-compose up` (see `docker-compose.yml` for ports and volumes).
 
+---
+
+## Versioning and image tags
+
+Releases follow [Semantic Versioning](https://semver.org); the full policy is in [`VERSIONING.md`](https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/VERSIONING.md). Three version numbers move independently:
+ 
+| Version | What it tags | Where it lives |
+|---------|--------------|----------------|
+| **Release version** | The code and the published Docker image | git tag / GitHub Release / Docker tag (`:vX.Y.Z`) |
+| **Contract version** | The transport contract | `info.version` in `config/openapi.yml` (currently `2.0.0`) |
+| **Envelope `schema_version`** | The output-envelope payload shape | `schema_version` field in every result (currently `"1.0"`) |
+ 
+**Always pin an explicit version tag; do not use `:latest`.** `:latest` is a moving pointer and can change what you run out from under you. Pinning a tag (`:vX.Y.Z`) — or, for full immutability, a digest (`@sha256:...`) — guarantees the exact image.
+ 
+Two release lines matter for this repository:
+ 
+- **`v1.0.1` — legacy, frozen.** The last release carrying the older BreedBase-compatibility response shape (single-trait, `?format=breedbase`). It is immutable and kept running only for older BreedBase instances that have not yet migrated. Do not build new work on it.
+- **`v2.0.0` — canonical-only (forthcoming).** The first release of the standardized, single-envelope contract described in this README: `POST /analyze`, image-only request, `schema_version`-stamped envelope, no `output_mode`/`format`. It is being cut as the next release; pin `:v2.0.0` once published.
 ---
 
 ## Troubleshooting
@@ -585,9 +595,3 @@ If you use this framework or the reference pipeline, please cite it. A manuscrip
 
 ---
 
-<!--
-  IMAGE ASSETS TO CREATE (referenced above; add under docs/img/):
-   - architecture.png     — Flowchart #1 from the poster blueprint (BreedBase ↔ Module ↔ pipelines)
-   - example_overlay.png  — sample_seeds.jpg (raw) next to its _ResultImage_ overlay
-   - capture_example.png  — a correctly set up photo (neutral background, color card, size marker)
--->
