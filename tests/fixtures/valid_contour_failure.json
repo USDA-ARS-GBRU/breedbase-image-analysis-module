@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "job_id": "00000000-0000-0000-0000-000000000003",
+  "pipeline": {
+    "name": "seed_size_shape",
+    "version": "2.0.0"
+  },
+  "qc": {
+    "analysis_pass": true,
+    "color_card_present": true,
+    "size_marker_detected": true,
+    "object_count": 2
+  },
+  "traits_emitted": [
+    "Object Perimeter From Segmentation Mask|IMGSTAT:0000010",
+    "Object Solidity|IMGSTAT:0000011"
+  ],
+  "objects": [
+    {
+      "object_id": "obj_001",
+      "source_label": "1",
+      "bbox": {
+        "x": 713,
+        "y": 554,
+        "w": 39,
+        "h": 36
+      },
+      "qc": {
+        "contour_found": true,
+        "ellipse_fit_ok": true
+      },
+      "traits": {
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": 13.64,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": 1.0111,
+          "unit": null
+        }
+      }
+    },
+    {
+      "object_id": "obj_002",
+      "bbox": null,
+      "qc": {
+        "contour_found": false
+      },
+      "traits": {
+        "Object Perimeter From Segmentation Mask|IMGSTAT:0000010": {
+          "value": null,
+          "unit": "mm"
+        },
+        "Object Solidity|IMGSTAT:0000011": {
+          "value": null,
+          "unit": null
+        }
+      }
+    }
+  ],
+  "derived_images": []
+}
