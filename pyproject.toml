@@ -1,3 +1,16 @@
+# =============================================================================
+# REVIEW COPY — staged 2026-07-14 from breedbase-image-analysis-module/pyproject.toml
+# (reference repo is read-only; edits/decisions land on this copy)
+#
+# Artifact 6 (Conformance_Test_Kit_Plan.md) — ACTIVATED in this revision:
+#   - register the bb-conformance console script            -> [project.scripts]
+#   - add a lightweight `conformance` extra (jsonschema)    -> [project.optional-dependencies]
+#   - keep pyyaml in `dev` (Artifact 5 drift guard)         -> [project.optional-dependencies]
+#   - ship the conformance package                          -> [tool.setuptools.packages.find]
+#   - ship envelope.schema.json as package data             -> [tool.setuptools.package-data]
+#
+# Earlier (Subtask 5): jsonschema>=4.18 added to `dev`. Unchanged bits below match the repo.
+# =============================================================================
 [build-system]
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
@@ -23,17 +36,30 @@ api = [
     "werkzeug>=2.3",
     "gunicorn>=21.0",
 ]
+# Lightweight: everything needed to RUN the conformance checker (bb-conformance /
+# `from conformance import validate`) without the full dev toolchain. Documented in
+# conformance/README.md as `pip install -e ".[conformance]"`.
+conformance = [
+    "jsonschema>=4.18",
+]
 dev = [
     "pytest>=7",
-    "jsonschema>=4.18",
+    "jsonschema>=4.18",   # conformance checker + tests/test_envelope_schema.py
+    "pyyaml",             # tests/test_schema_matches_openapi.py parses openapi.yml
 ]
 
 [project.scripts]
 bb-analyze = "cli:main"
+bb-conformance = "conformance.validate:main"
 
 [tool.setuptools]
 py-modules = ["process_image", "cli"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["pipelines*", "api*"]
+include = ["pipelines*", "api*", "conformance*"]
+
+# Ship the schema INSIDE the wheel so validate.py can load it via
+# importlib.resources.files("conformance") from an installed package, not just a checkout.
+[tool.setuptools.package-data]
+conformance = ["envelope.schema.json"]

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/conformance/envelope.schema.json",
   "title": "BreedBase Image Analysis canonical output envelope",
-  "description": "Conformance authority for the canonical output envelope (API_Standardization_Tracker.md Subtask 5). Strict on required structure, lenient on extras (additionalProperties: true) so pipelines can add their own fields. Does not encode pipeline-specific analysis_pass criteria.",
+  "description": "Conformance authority for the canonical output envelope (API_Standardization_Tracker.md Subtask 5; Conformance_Test_Kit_Plan.md Artifact 1). Strict on required structure, lenient on extras (additionalProperties: true) so pipelines can add their own fields. Does not encode pipeline-specific analysis_pass criteria. RECONCILED COPY for review (2026-07-14): value/unit remain nullable-but-required per FLAG 2 resolution (adopt as-built); qc optional flags and bbox shape typed-when-present (non-breaking, validated against the real golden envelope).",
   "type": "object",
   "required": [
     "schema_version",
@@ -46,7 +46,10 @@
       "required": ["analysis_pass"],
       "additionalProperties": true,
       "properties": {
-        "analysis_pass": { "type": "boolean" }
+        "analysis_pass": { "type": "boolean" },
+        "object_count": { "type": "integer", "minimum": 0 },
+        "color_card_present": { "type": "boolean" },
+        "size_marker_detected": { "type": "boolean" }
       }
     },
     "traits_emitted": {
@@ -75,7 +78,18 @@
         "properties": {
           "object_id": { "type": "string" },
           "source_label": { "type": "string" },
-          "bbox": { "type": "object" },
+          "bbox": {
+            "comment": "bbox is null when an object's contour detection fails (shape_analysis returns no bbox); see contract_change_impact_map.md §2 change 6. Typed x,y,w,h apply only when bbox is an object.",
+            "type": ["object", "null"],
+            "required": ["x", "y", "w", "h"],
+            "additionalProperties": true,
+            "properties": {
+              "x": { "type": "integer" },
+              "y": { "type": "integer" },
+              "w": { "type": "integer" },
+              "h": { "type": "integer" }
+            }
+          },
           "qc": { "type": "object", "additionalProperties": true },
           "traits": {
             "type": "object",

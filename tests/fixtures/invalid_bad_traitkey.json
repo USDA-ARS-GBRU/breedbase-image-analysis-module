@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "job_id": "00000000-0000-0000-0000-000000000001",
+  "pipeline": {
+    "name": "seed_size_shape",
+    "version": "2.0.0"
+  },
+  "qc": {
+    "analysis_pass": true
+  },
+  "traits_emitted": [
+    "Object Max Diameter"
+  ],
+  "objects": [
+    {
+      "object_id": "obj_001",
+      "traits": {
+        "Object Max Diameter": {
+          "value": 4.3,
+          "unit": "mm"
+        }
+      }
+    }
+  ],
+  "derived_images": []
+}

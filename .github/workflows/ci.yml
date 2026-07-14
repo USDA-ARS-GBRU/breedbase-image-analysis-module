@@ -1,0 +1,54 @@
+# CI — tests and conformance
+#
+# This runs the test suite + a bb-conformance
+# smoke check on every push and PR, so the conformance kit is part of the merge gate.
+# Matrixed on the endpoints of the supported range (requires-python ">=3.9"; the
+# Dockerfile pins 3.12).
+name: CI — tests and conformance
+
+on:
+  push:
+  pull_request:
+
+# Cancel an in-progress run when a newer commit is pushed to the same ref.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.12"]   # endpoints of the supported range
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      # api  -> connexion/flask, so tests/test_api.py + test_process_image.py run
+      # dev  -> pytest + jsonschema + pyyaml (conformance tests + drift guard)
+      # core deps (opencv, numpy, scipy, scikit-image, matplotlib) install automatically
+      - name: Install the package with test extras
+        run: pip install -e ".[api,dev]"
+
+      - name: Run the test suite
+        run: pytest tests/ -q
+
+      # Prove the INSTALLED bb-conformance CLI works both ways: accept a valid
+      # envelope (exit 0) and reject an invalid one (non-zero). The negative check is
+      # guarded so a correct rejection does not fail the job.
+      - name: bb-conformance smoke check
+        run: |
+          bb-conformance tests/fixtures/valid_minimal.json
+          if bb-conformance tests/fixtures/invalid_missing_qc.json; then
+            echo "::error::invalid fixture unexpectedly passed conformance" && exit 1
+          fi
+          echo "smoke check OK: valid passed, invalid rejected"

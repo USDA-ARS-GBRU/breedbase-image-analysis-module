@@ -66,7 +66,7 @@ docker pull hkmanchi/sorghum-breedbase-image-pipeline:<version>
 docker run --rm \
   -v "$(pwd)/results:/results" \
   hkmanchi/sorghum-breedbase-image-pipeline:<version> \
-  bb-analyze /app/tests/fixtures/sample_seeds.jpg --output-dir /results --output-mode all
+  bb-analyze /app/tests/fixtures/sample_seeds.jpg --output-dir /results
 ```
 
 You will get two files in `./results/`:
@@ -91,7 +91,7 @@ To go further, see [Running the reference pipeline](#running-the-reference-pipel
 **Included:**
 
 - A reference Flask/Connexion backend implementing the BreedBase image analysis integration layer
-- A standardized API contract (OpenAPI 3.0, contract `info.version` 2.0.0) plus a standalone `envelope.schema.json` (JSON Schema 2020-12) defining how BreedBase communicates with pipelines
+- A standardized API contract (OpenAPI 3.0, contract `info.version` 2.0.0) plus a standalone `conformance/envelope.schema.json` (JSON Schema 2020-12) — the authoritative, machine-checkable definition of the output envelope
 - A pipeline interface specification describing what any compliant pipeline must accept and return
 - A complete reference pipeline (seed morphometry)
 - Documentation for reproducible deployment
@@ -122,7 +122,7 @@ Step-by-step:
 
 ## The API Contract
 
-The full contract is in `config/openapi.yml` (`openapi: 3.0.0`, `info.version: 2.0.0`); the canonical envelope also has a standalone, machine-checkable definition in `envelope.schema.json` (JSON Schema 2020-12). A rendered, browsable version is published at [API docs](#) *(link once GitHub Pages / Redoc is set up)*. Summary below.
+The full contract is in `api/config/openapi.yml` (`openapi: 3.0.0`, `info.version: 2.0.0`); the canonical envelope also has a standalone, machine-checkable definition in `conformance/envelope.schema.json` (JSON Schema 2020-12), which is the authority for the finer envelope constraints the 3.0 spec cannot express (the trait-key pattern, nullable `value`/`unit`, and the typed `bbox`). A rendered, browsable version is published at [API docs](#) *(link once GitHub Pages / Redoc is set up)*. Summary below.
 
 ### Endpoint
 
@@ -173,7 +173,15 @@ Trait keys use the format `Human-readable name|IMGSTAT:ID` (e.g., `Object Maximu
 
 ## Building a Compatible Pipeline
 
-Any image analysis pipeline can join this framework by satisfying the interface below. The seed morphometry pipeline here is the reference — copy its structure. Full specification: `docs/PIPELINE_REQUIREMENTS.md`. To check your work, run the conformance test kit *(see [Contributing](#contributing))*.
+Any image analysis pipeline can join this framework by satisfying the interface below. The seed morphometry pipeline here is the reference — copy its structure. Full specification: `docs/PIPELINE_REQUIREMENTS.md` *(planned)*. To check your work, validate your output against the contract with the conformance kit:
+
+```bash
+pip install -e ".[conformance]"
+bb-conformance your_output.json          # exit 0 = valid, 1 = problems (each with its JSON path)
+bb-conformance --pipeline-output your_output.json   # if the module hasn't added job_id/derived_images yet
+```
+
+The kit ships `conformance/envelope.schema.json` as the authority and a `bb-conformance` checker; see [Contributing](#contributing).
 
 ### What a pipeline must accept
 
@@ -186,7 +194,7 @@ Any image analysis pipeline can join this framework by satisfying the interface 
 
 ### What a pipeline must return
 
-A JSON payload (printed to stdout or returned to the caller) containing `pipeline.name`, `pipeline.version`, `qc`, `objects`, and `traits_emitted`. See [The output envelope](#the-output-envelope) for the full structure and a complete example — it is not repeated here.
+A JSON payload (printed to stdout or returned to the caller) containing `schema_version`, `pipeline.name`, `pipeline.version`, `qc`, `objects`, and `traits_emitted`. See [The output envelope](#the-output-envelope) for the full structure and a complete example — it is not repeated here.
 
 Minimum QC block:
 
@@ -205,7 +213,6 @@ Minimum QC block:
 - [ ] No hard-coded file paths
 - [ ] Output written only to the designated output directory
 - [ ] Runnable as a Docker container
-*- [ ] Runnable as a Docker container*
 
 ### Recommended repository structure
 
@@ -280,7 +287,11 @@ Every compliant pipeline returns the same JSON structure — that uniformity is 
 | `qc.color_card_present` | Whether a color card was detected and applied. If `false`, color traits may be unreliable |
 | `qc.size_marker_detected` | Whether the size marker was found. If `false`, dimensions are in **pixels, not mm**, and `unit` reflects that |
 | `objects[].object_id` | Sequential ID, left-to-right, top-to-bottom; stable across repeated analyses |
-| `traits` keys | Format `Human-readable name\|IMGSTAT:ID`. The **IMGSTAT ID is authoritative**; the label must exactly match the official IMGSTAT label for that ID (not free text) and is validated against a pinned IMGSTAT release. Each value is reported in the scale (unit) defined by its IMGSTAT term, so the term — not a free-form unit string — is what fixes the unit. See the [IMGSTAT ontology repo](https://github.com/USDA-ARS-GBRU/imgstat-ontology)
+| `traits` keys | Format `Human-readable name\|IMGSTAT:ID`. The **IMGSTAT ID is authoritative**; the label must exactly match the official IMGSTAT label for that ID (not free text) and is validated against a pinned IMGSTAT release. Each value is reported in the scale (unit) defined by its IMGSTAT term, so the term — not a free-form unit string — is what fixes the unit. See the [IMGSTAT ontology repo](https://github.com/USDA-ARS-GBRU/imgstat-ontology) |
+| `traits[].value` / `unit` | Both keys are always present but **may be `null`**: a dimensionless trait (e.g. solidity) reports `unit: null`, and a measurement that failed for a given object reports `value: null`. Treat a present-but-null value as "not measured," not zero |
+| `objects[].bbox` | The `{x, y, w, h}` bounding box, or **`null`** when an object's contour could not be found (its `objects[].qc` records the reason, e.g. `contour_found: false`) — such objects remain in `objects[]` |
+
+> **Nullable fields, at a glance.** The canonical schema keeps `value`, `unit`, and `bbox` keys *present* on every object but allows them to be `null` for dimensionless or unmeasurable cases, rather than dropping the keys. This is what lets a partially-failed image still return a valid, storable envelope. The `bb-conformance` checker enforces exactly this.
 
 ---
 
@@ -300,7 +311,7 @@ The reference pipeline's accuracy depends on how the photo is taken. Every image
 
 - **A neutral, uncluttered background that contrasts with target object** (a plain matte sheet works well) so objects segment cleanly.
 - **One color calibration card**, fully visible and unobstructed, for lighting/color correction.
-- **One circular size marker of known diameter** (default assumed `0.75"`) for the pixel-to-millimeter conversion. If yours differs, pass the correct value (`--marker-diameter` / `marker_diameter_in`).
+- **One circular size marker of known diameter** (default assumed `0.75"`) for the pixel-to-millimeter conversion. If yours differs, set it when running the pipeline (`--marker-diameter`) — it is a pipeline-internal setting, not an HTTP request field.
 - **Even, diffuse lighting** with minimal shadows and no glare on the seeds, card, or marker.
 - **Seeds/organs spread out** so they do not touch or overlap (touching objects may be merged).
 
@@ -455,7 +466,7 @@ Recommended for BreedBase integration and for anyone who prefers not to manage a
 Pin an explicit version tag (`:<version>`), not `:latest` — see [Versioning and image tags](#versioning-and-image-tags).
 
 ```bash
-docker pull hkmanchi/sorghum-breedbase-image-pipeline:latest   # linux/amd64
+docker pull hkmanchi/sorghum-breedbase-image-pipeline:<version>   # linux/amd64 — pin a version, never :latest
 ```
 
 Run the REST API server:
@@ -487,7 +498,7 @@ Releases follow [Semantic Versioning](https://semver.org); the full policy is in
 | Version | What it tags | Where it lives |
 |---------|--------------|----------------|
 | **Release version** | The code and the published Docker image | git tag / GitHub Release / Docker tag (`:vX.Y.Z`) |
-| **Contract version** | The transport contract | `info.version` in `config/openapi.yml` (currently `2.0.0`) |
+| **Contract version** | The transport contract | `info.version` in `api/config/openapi.yml` (currently `2.0.0`) |
 | **Envelope `schema_version`** | The output-envelope payload shape | `schema_version` field in every result (currently `"1.0"`) |
  
 **Always pin an explicit version tag; do not use `:latest`.** `:latest` is a moving pointer and can change what you run out from under you. Pinning a tag (`:vX.Y.Z`) — or, for full immutability, a digest (`@sha256:...`) — guarantees the exact image.
@@ -564,7 +575,7 @@ The framework and reference pipeline are **deployed and operational in a dedicat
 
 ## Contributing
 
-This is an open standard — new pipelines and improvements are welcome. See [`CONTRIBUTING.md`](https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/CONTRIBUTING.md) for how to propose a pipeline, and run the conformance test kit *(to be added)* to verify your pipeline produces a valid envelope before submitting.
+This is an open standard — new pipelines and improvements are welcome. See [`CONTRIBUTING.md`](https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/CONTRIBUTING.md) for how to propose a pipeline. Before submitting, verify your pipeline's output with the conformance kit — `pip install -e ".[conformance]"`, then `bb-conformance your_output.json` (exit `0` = valid). The same checks run automatically in CI (`pytest` + a `bb-conformance` smoke check) on every push and pull request.
 
 ---
 

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "job_id": "00000000-0000-0000-0000-000000000004",
+  "pipeline": {
+    "name": "seed_size_shape",
+    "version": "2.0.0"
+  },
+  "qc": {
+    "analysis_pass": true,
+    "object_count": 0
+  },
+  "traits_emitted": [],
+  "objects": [],
+  "derived_images": []
+}
