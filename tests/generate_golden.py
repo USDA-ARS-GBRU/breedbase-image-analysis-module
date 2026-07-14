@@ -24,7 +24,7 @@ VOLATILE_KEYS = {"job_id", "timestamp", "input", "derived_images"}
 
 
 def find_source():
-    pattern = str(RESULTS_DIR / "sample_seeds_*_metadata_*.json")
+    pattern = str(RESULTS_DIR / "sample_seeds_metadata_*.json")
     matches = sorted(glob.glob(pattern))
     if not matches:
         sys.exit(
