@@ -14,7 +14,7 @@ This project fixes that. It defines a **standard connector** between [BreedBase]
 
 *The module sits between BreedBase and the analysis pipelines. BreedBase never calls a pipeline directly — it hands images to the module, and the module routes, validates, and returns standardized results.*
 
-![Architecture diagram: BreedBase submits images to the Image Analysis Module, which routes them to any registered pipeline, validates the results, and returns standardized observations to BreedBase.](docs/img/architecture.tiff)
+![Architecture diagram: BreedBase submits images to the Image Analysis Module, which routes them to any registered pipeline, validates the results, and returns standardized observations to BreedBase.](docs/img/architecture.png)
 
 *BreedBase appears twice because it both **sends** the image out for analysis and **receives** the finished measurements back.*
 
@@ -81,7 +81,8 @@ Example output:
 | obj_001 | 4.3 mm | 3.1 mm | 14.2 mm² |
 | obj_002 | 4.1 mm | 3.0 mm | 13.6 mm² |
 
-<img src="https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/docs/img/example_overlay.tiff" alt="Example: an image of seeds on the left; the same image with each seed outlined and labeled on the right." width="600" height="400">
+<!-- <img src="https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/docs/img/example_overlay.tiff" alt="Example: an image of seeds on the left; the same image with each seed outlined and labeled on the right." width="600" height="400"> -->
+![Example: an image of seeds on the left; the same image with each seed outlined and labeled on the right.](docs/img/example_overlay_75.png)
 
 To go further, see [Running the reference pipeline](#running-the-reference-pipeline).
 
@@ -315,7 +316,9 @@ The reference pipeline's accuracy depends on how the photo is taken. Every image
 - **Even, diffuse lighting** with minimal shadows and no glare on the seeds, card, or marker.
 - **Seeds/organs spread out** so they do not touch or overlap (touching objects may be merged).
 
-<img src="https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/docs/img/capture_example.jpg" alt="Example of a correctly set up photo: seeds spread on a neutral background with a color card and circular size marker." width="300" height="200">
+<!-- <img src="https://github.com/USDA-ARS-GBRU/breedbase-image-analysis-module/blob/main/docs/img/capture_example.jpg" alt="Example of a correctly set up photo: seeds spread on a neutral background with a color card and circular size marker." width="300" height="200"> -->
+![Example of a correctly set up photo: seeds spread on a neutral background with a color card and circular size marker.](docs/img/capture_example_75.png)
+
 
 If the color card or size marker is not detected, the corresponding QC flag will be `false` — see [Troubleshooting](#troubleshooting).
 
